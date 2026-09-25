@@ -1,0 +1,7487 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GastroFlow">
+<meta name="description" content="GastroFlow - Gestão completa para bar, restaurante, mesas, pedidos, estoque, caixa e delivery">
+<title>GastroFlow - Gestão Completa</title>
+
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+
+body{
+margin:0;
+font-family:Inter,Arial,Helvetica,sans-serif;
+background:#f5f7fb;
+color:#172033;
+font-size:17px;
+line-height:1.5;
+-webkit-tap-highlight-color:transparent
+}
+
+header{
+background:linear-gradient(135deg,#0f172a,#1e3a8a);
+color:#fff;
+padding:30px 18px 28px;
+text-align:center;
+box-shadow:0 5px 20px rgba(15,23,42,.18)
+}
+
+header h1{margin:0;font-size:34px;font-weight:800}
+header p{margin:8px 0 0;color:#dbeafe}
+
+.menu{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+padding:16px;
+background:#fff;
+border-bottom:1px solid #e2e8f0;
+justify-content:center;
+box-shadow:0 3px 12px rgba(15,23,42,.06)
+}
+
+.menu-btn{
+border:1px solid #e2e8f0;
+background:#f8fafc;
+color:#334155;
+padding:13px 18px;
+border-radius:12px;
+font-size:16px;
+font-weight:700;
+cursor:pointer;
+transition:.2s
+}
+
+.menu-btn:hover{
+background:#eff6ff;
+color:#1d4ed8;
+transform:translateY(-2px)
+}
+
+main{
+max-width:1280px;
+margin:auto;
+padding:28px 20px 50px
+}
+
+.modulo{display:none}
+.modulo.ativo{
+display:block;
+animation:entrada .2s ease
+}
+
+@keyframes entrada{
+from{opacity:0;transform:translateY(5px)}
+to{opacity:1;transform:translateY(0)}
+}
+
+.titulo-modulo{
+position:relative;
+margin:0 0 24px;
+padding-bottom:12px;
+font-size:30px;
+font-weight:800;
+color:#0f172a
+}
+
+.titulo-modulo:after{
+content:"";
+position:absolute;
+left:0;
+bottom:0;
+width:55px;
+height:4px;
+border-radius:10px;
+background:linear-gradient(90deg,#2563eb,#60a5fa)
+}
+
+.card,.item-card,.mesa-card{
+background:#fff;
+border:1px solid #e4e9f1;
+border-radius:18px;
+padding:21px;
+margin-bottom:20px;
+box-shadow:0 5px 18px rgba(15,23,42,.06)
+}
+
+.item-card:hover,.mesa-card:hover{
+transform:translateY(-2px);
+box-shadow:0 9px 22px rgba(15,23,42,.09)
+}
+
+.form-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:17px
+}
+
+label{
+display:block;
+font-weight:700;
+margin-bottom:7px;
+color:#334155
+}
+
+input,select,textarea{
+width:100%;
+padding:14px 15px;
+border:1px solid #cbd5e1;
+border-radius:11px;
+font-size:17px;
+background:#fff;
+color:#172033;
+outline:none;
+font-family:inherit
+}
+
+textarea{
+min-height:100px;
+resize:vertical
+}
+
+input:focus,select:focus,textarea:focus{
+border-color:#2563eb;
+box-shadow:0 0 0 4px rgba(37,99,235,.11)
+}
+
+button{font-family:inherit}
+
+.btn{
+border:0;
+border-radius:11px;
+padding:13px 18px;
+font-size:16px;
+font-weight:700;
+cursor:pointer;
+transition:.18s;
+box-shadow:0 3px 8px rgba(15,23,42,.08)
+}
+
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff}
+.btn-success{background:linear-gradient(135deg,#16a34a,#15803d);color:#fff}
+.btn-danger{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff}
+.btn-warning{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff}
+.btn-secondary{background:linear-gradient(135deg,#64748b,#475569);color:#fff}
+.btn-relatorio{background:linear-gradient(135deg,#0f766e,#0d9488);color:#fff}
+.btn-imprimir{background:#111827;color:#fff}
+
+.acoes{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+margin-top:17px
+}
+
+.resumo{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+gap:16px;
+margin-bottom:22px
+}
+
+.resumo-card{
+position:relative;
+overflow:hidden;
+background:#fff;
+border:1px solid #e5eaf1;
+padding:21px;
+border-radius:17px;
+box-shadow:0 5px 16px rgba(15,23,42,.055);
+color:#64748b;
+font-weight:700
+}
+
+.resumo-card:before{
+content:"";
+position:absolute;
+top:0;
+left:0;
+right:0;
+height:4px;
+background:#2563eb
+}
+
+.resumo-card strong{
+display:block;
+font-size:30px;
+margin-top:8px;
+color:#0f172a
+}
+
+.lista{
+display:grid;
+gap:16px
+}
+
+.badge{
+display:inline-block;
+padding:6px 11px;
+border-radius:999px;
+font-size:13px;
+font-weight:800
+}
+
+.badge-aberta{background:#dcfce7;color:#166534}
+.badge-livre{background:#f1f5f9;color:#475569}
+.badge-pendente{background:#fef3c7;color:#92400e}
+.badge-preparo{background:#dbeafe;color:#1e40af}
+.badge-pronto{background:#fce7f3;color:#9d174d}
+.badge-entregue{background:#dcfce7;color:#166534}
+.badge-novo{background:#ede9fe;color:#6d28d9}
+.badge-saiu{background:#ffedd5;color:#c2410c}
+.badge-delivery{background:#e0f2fe;color:#0369a1}
+
+.mesas-grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(270px,1fr));
+gap:17px
+}
+
+.mesa-card{position:relative}
+.mesa-card.aberta{border:2px solid #86efac}
+
+.item-linha{
+padding:13px 0;
+border-bottom:1px solid #edf1f5
+}
+
+.item-linha-top{
+display:flex;
+justify-content:space-between;
+gap:10px
+}
+
+.caixa-card{border:2px solid #93c5fd}
+.delivery-card{border:2px solid #bfdbfe}
+.delivery-card.novo{border-color:#c4b5fd}
+.delivery-card.preparo{border-color:#93c5fd}
+.delivery-card.pronto{border-color:#86efac}
+.delivery-card.saiu{border-color:#fdba74}
+
+.btn-receber,
+.btn-enviar-preparo,
+.btn-marcar-pronto,
+.btn-marcar-entregue{
+width:100%;
+border:0;
+border-radius:11px;
+padding:15px;
+color:#fff;
+font-weight:800;
+cursor:pointer;
+margin-top:11px
+}
+
+.btn-receber{
+background:linear-gradient(135deg,#16a34a,#15803d);
+font-size:18px
+}
+
+.btn-enviar-preparo{
+background:linear-gradient(135deg,#f97316,#ea580c)
+}
+
+.btn-marcar-pronto{
+background:linear-gradient(135deg,#3b82f6,#2563eb)
+}
+
+.btn-marcar-entregue{
+background:linear-gradient(135deg,#22c55e,#16a34a)
+}
+
+.tabela-container{overflow-x:auto}
+
+.tabela{
+width:100%;
+border-collapse:collapse
+}
+
+.tabela th,.tabela td{
+padding:14px;
+border-bottom:1px solid #e8edf3;
+text-align:left
+}
+
+.tabela th{background:#f8fafc}
+.tabela tbody tr:nth-child(even){background:#fafbfc}
+
+.alerta{
+padding:14px 16px;
+border-radius:11px;
+margin-top:11px;
+font-weight:600
+}
+
+.alerta-baixo{
+background:#fef2f2;
+color:#991b1b;
+border:1px solid #fecaca
+}
+
+.alerta-ok{
+background:#f0fdf4;
+color:#166534;
+border:1px solid #bbf7d0
+}
+
+.mensagem{
+position:fixed;
+right:20px;
+bottom:20px;
+max-width:380px;
+padding:17px 20px;
+border-radius:14px;
+color:#fff;
+font-weight:700;
+display:none;
+z-index:9999;
+box-shadow:0 10px 30px rgba(0,0,0,.22)
+}
+
+.mensagem.sucesso{
+background:linear-gradient(135deg,#16a34a,#15803d)
+}
+
+.mensagem.erro{
+background:linear-gradient(135deg,#dc2626,#b91c1c)
+}
+
+.modal{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(15,23,42,.68);
+backdrop-filter:blur(4px);
+z-index:5000;
+align-items:center;
+justify-content:center;
+padding:20px
+}
+
+.modal.ativo{display:flex}
+
+.modal-conteudo{
+background:#fff;
+width:100%;
+max-width:700px;
+max-height:90vh;
+overflow:auto;
+border-radius:20px;
+padding:25px;
+box-shadow:0 25px 70px rgba(0,0,0,.28)
+}
+
+.confirmacao-pagamento{
+border:2px solid #22c55e;
+background:#f0fdf4;
+border-radius:16px;
+padding:19px;
+margin-top:15px
+}
+
+.confirmacao-pagamento .valor{
+font-size:34px;
+font-weight:900;
+color:#2563eb;
+margin:12px 0
+}
+
+.btn-confirmar-pagamento,
+.btn-cancelar-pagamento{
+width:100%;
+border:0;
+border-radius:11px;
+padding:17px;
+color:#fff;
+font-size:18px;
+font-weight:800;
+cursor:pointer
+}
+
+.btn-confirmar-pagamento{
+background:linear-gradient(135deg,#16a34a,#15803d)
+}
+
+.btn-cancelar-pagamento{
+background:#64748b;
+margin-top:10px
+}
+
+.relatorio-destaque{border:2px solid #60a5fa}
+.relatorio-lucro{border:2px solid #4ade80}
+.relatorio-alerta{border:2px solid #fca5a5}
+
+.periodo-rapido{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+margin-top:16px
+}
+
+.periodo-rapido .btn{
+flex:1;
+min-width:140px
+}
+
+.sem-dados{
+padding:24px;
+text-align:center;
+color:#64748b;
+background:#f8fafc;
+border-radius:12px
+}
+
+.foto-produto-area{
+grid-column:1/-1;
+display:flex;
+align-items:center;
+gap:20px;
+flex-wrap:wrap;
+padding:18px;
+background:#f8fafc;
+border:1px dashed #bfdbfe;
+border-radius:16px
+}
+
+.preview-foto{
+width:130px;
+height:130px;
+border-radius:18px;
+overflow:hidden;
+background:#e2e8f0;
+display:flex;
+align-items:center;
+justify-content:center;
+border:2px solid #dbeafe;
+flex-shrink:0
+}
+
+.preview-foto img{
+width:100%;
+height:100%;
+object-fit:cover
+}
+
+.preview-foto-vazia{
+text-align:center;
+color:#64748b;
+font-size:14px;
+padding:10px
+}
+
+.foto-produto-acoes{
+flex:1;
+min-width:220px
+}
+
+.foto-produto-acoes input[type=file]{
+padding:10px;
+background:#fff
+}
+
+.produto-card-com-foto{
+display:grid;
+grid-template-columns:150px 1fr;
+gap:20px;
+align-items:start
+}
+
+.produto-foto-card{
+width:150px;
+height:150px;
+border-radius:18px;
+overflow:hidden;
+background:#eef2f7;
+border:1px solid #e2e8f0;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:48px
+}
+
+.produto-foto-card img{
+width:100%;
+height:100%;
+object-fit:cover
+}
+
+.produto-foto-vazia{font-size:48px}
+
+.delivery-produto{
+display:grid;
+grid-template-columns:70px 1fr 100px;
+gap:14px;
+align-items:center;
+padding:12px;
+border:1px solid #e2e8f0;
+border-radius:14px;
+margin-bottom:10px;
+background:#fff
+}
+
+.delivery-produto img,
+.delivery-produto-sem-foto{
+width:70px;
+height:70px;
+border-radius:12px;
+object-fit:cover;
+background:#eef2f7;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:30px
+}
+
+.delivery-produto-info strong{
+display:block;
+font-size:17px
+}
+
+.delivery-produto-info small{color:#64748b}
+
+.delivery-quantidade{
+display:flex;
+align-items:center;
+justify-content:flex-end;
+gap:5px
+}
+
+.delivery-quantidade button{
+width:32px;
+height:32px;
+border:0;
+border-radius:8px;
+background:#e0e7ff;
+color:#1d4ed8;
+font-weight:900;
+cursor:pointer
+}
+
+.delivery-quantidade span{
+min-width:28px;
+text-align:center;
+font-weight:800
+}
+
+.delivery-total{
+padding:18px;
+border-radius:15px;
+background:#eff6ff;
+border:2px solid #bfdbfe;
+text-align:right;
+margin-top:15px
+}
+
+.delivery-total strong{
+display:block;
+font-size:30px;
+color:#1d4ed8
+}
+
+.delivery-resumo{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+gap:12px
+}
+
+.delivery-resumo-item{
+background:#f8fafc;
+border-radius:12px;
+padding:12px
+}
+
+.delivery-resumo-item strong{
+display:block;
+margin-top:4px
+}
+
+/* PAINEL */
+
+.painel-boas-vindas{
+background:linear-gradient(135deg,#eff6ff,#dbeafe);
+border:1px solid #bfdbfe;
+border-radius:18px;
+padding:24px;
+margin-bottom:22px
+}
+
+.painel-boas-vindas h3{
+margin:0 0 5px;
+color:#1e3a8a
+}
+
+.painel-boas-vindas p{
+margin:0;
+color:#475569
+}
+
+.painel-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:18px;
+margin-bottom:24px
+}
+
+.painel-card{
+position:relative;
+overflow:hidden;
+background:#fff;
+border:1px solid #e4e9f1;
+border-radius:18px;
+padding:22px;
+box-shadow:0 6px 20px rgba(15,23,42,.07);
+color:#475569;
+font-weight:700
+}
+
+.painel-card:before{
+content:"";
+position:absolute;
+left:0;
+top:0;
+bottom:0;
+width:5px;
+background:#2563eb
+}
+
+.painel-card strong{
+display:block;
+margin-top:8px;
+font-size:30px;
+color:#0f172a
+}
+
+.painel-card small{
+color:#64748b;
+font-weight:600
+}
+
+.painel-card.verde:before{background:#16a34a}
+.painel-card.laranja:before{background:#f97316}
+.painel-card.roxo:before{background:#7c3aed}
+.painel-card.vermelho:before{background:#dc2626}
+.painel-card.azul:before{background:#2563eb}
+.painel-card.teal:before{background:#0d9488}
+
+.painel-acoes{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:12px
+}
+
+.painel-acoes .btn{width:100%}
+
+/* FLUXO DOS PEDIDOS */
+
+.pedidos-fluxo{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:12px;
+margin-bottom:24px
+}
+
+.pedido-etapa{
+background:#fff;
+border:1px solid #e2e8f0;
+border-radius:15px;
+padding:15px;
+text-align:center;
+box-shadow:0 4px 12px rgba(15,23,42,.05)
+}
+
+.pedido-etapa span{
+display:block;
+font-size:28px;
+margin-bottom:3px
+}
+
+.pedido-etapa strong{
+display:block;
+font-size:24px;
+color:#0f172a
+}
+
+.pedido-etapa small{color:#64748b}
+
+.pedidos-colunas{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:18px;
+align-items:start
+}
+
+.pedidos-coluna{
+background:#eef2f7;
+border-radius:18px;
+padding:15px;
+min-height:120px
+}
+
+.pedidos-coluna h3{
+margin:0 0 14px;
+font-size:18px
+}
+
+.pedidos-coluna.pendente{
+border-top:5px solid #f59e0b
+}
+
+.pedidos-coluna.preparo{
+border-top:5px solid #3b82f6
+}
+
+.pedidos-coluna.pronto{
+border-top:5px solid #16a34a
+}
+
+.pedido-card{
+background:#fff;
+border:1px solid #e2e8f0;
+border-radius:16px;
+padding:16px;
+margin-bottom:13px;
+box-shadow:0 4px 12px rgba(15,23,42,.06)
+}
+
+.pedido-card:last-child{margin-bottom:0}
+
+.pedido-cabecalho{
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+gap:10px;
+margin-bottom:10px
+}
+
+.pedido-cabecalho h4{
+margin:0;
+font-size:19px;
+color:#0f172a
+}
+
+.pedido-cliente{
+font-size:14px;
+color:#64748b;
+margin:2px 0 10px
+}
+
+.pedido-item{
+display:flex;
+justify-content:space-between;
+gap:8px;
+padding:9px 0;
+border-bottom:1px solid #edf1f5;
+font-size:15px;
+flex-wrap:wrap
+}
+
+.pedido-item:last-of-type{border-bottom:0}
+
+.pedido-item-info{
+flex:1;
+min-width:150px
+}
+
+.pedido-item-acao{
+width:100%;
+display:flex;
+gap:7px;
+margin-top:4px
+}
+
+.btn-item-preparo{
+width:100%;
+border:0;
+border-radius:9px;
+padding:9px 12px;
+background:#fff7ed;
+border:1px solid #fdba74;
+color:#c2410c;
+font-size:14px;
+font-weight:800;
+cursor:pointer
+}
+
+.btn-item-preparo:hover{
+background:#ffedd5
+}
+
+.pedido-total{
+display:flex;
+justify-content:space-between;
+margin-top:10px;
+padding-top:10px;
+border-top:2px solid #f1f5f9;
+font-weight:800
+}
+
+.pedido-botao{
+width:100%;
+border:0;
+border-radius:10px;
+padding:12px;
+color:#fff;
+font-weight:800;
+cursor:pointer;
+margin-top:12px
+}
+
+.pedido-botao.preparo{
+background:linear-gradient(135deg,#f97316,#ea580c)
+}
+
+.pedido-botao.pronto{
+background:linear-gradient(135deg,#2563eb,#1d4ed8)
+}
+
+.pedido-botao.entregue{
+background:linear-gradient(135deg,#16a34a,#15803d)
+}
+
+.pedido-vazio{
+background:#fff;
+border:1px dashed #cbd5e1;
+border-radius:12px;
+padding:20px;
+text-align:center;
+color:#64748b;
+font-size:14px
+}
+
+.pedido-ajuda{
+background:#eff6ff;
+border:1px solid #bfdbfe;
+border-radius:12px;
+padding:12px 14px;
+color:#1e40af;
+font-size:14px;
+margin-bottom:14px
+}
+
+/* BACKUP */
+
+.backup-destaque{
+border:2px solid #60a5fa;
+background:linear-gradient(135deg,#eff6ff,#ffffff)
+}
+
+.backup-icone{
+font-size:48px;
+margin-bottom:8px
+}
+
+.backup-aviso{
+border:2px solid #fbbf24;
+background:#fffbeb;
+color:#92400e;
+border-radius:16px;
+padding:18px;
+margin-top:20px
+}
+
+.backup-arquivo{
+border:1px dashed #93c5fd;
+background:#f8fafc;
+border-radius:15px;
+padding:16px;
+margin-top:16px
+}
+
+
+
+/* RECURSOS COMERCIAIS */
+
+.recursos-comerciais{
+margin-top:20px;
+border:1px solid #bfdbfe;
+background:linear-gradient(135deg,#ffffff,#eff6ff)
+}
+
+.recursos-comerciais h3{
+margin:0 0 5px;
+font-size:22px;
+color:#0f172a
+}
+
+.recursos-intro{
+margin:0 0 18px;
+color:#64748b
+}
+
+.recursos-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:14px
+}
+
+.recurso-comercial{
+display:flex;
+align-items:flex-start;
+gap:13px;
+padding:17px;
+background:#fff;
+border:1px solid #e2e8f0;
+border-radius:15px;
+box-shadow:0 4px 12px rgba(15,23,42,.04)
+}
+
+.recurso-icone{
+width:46px;
+height:46px;
+border-radius:13px;
+background:#eff6ff;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:25px;
+flex-shrink:0
+}
+
+.recurso-categoria{
+display:block;
+font-size:11px;
+font-weight:900;
+letter-spacing:.08em;
+color:#2563eb;
+margin-bottom:4px
+}
+
+.recurso-comercial strong{
+display:block;
+font-size:17px;
+color:#0f172a
+}
+
+.recurso-comercial p{
+margin:3px 0 0;
+color:#64748b;
+font-size:14px
+}
+
+/* CONTATO E SUPORTE */
+
+a.btn{
+text-decoration:none;
+display:inline-flex;
+align-items:center;
+justify-content:center
+}
+
+.suporte-destaque{
+border:2px solid #60a5fa;
+background:linear-gradient(135deg,#eff6ff,#ffffff)
+}
+
+.suporte-icone{
+font-size:52px;
+margin-bottom:8px
+}
+
+.suporte-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:16px;
+margin-top:18px
+}
+
+.suporte-item{
+background:#f8fafc;
+border:1px solid #e2e8f0;
+border-radius:16px;
+padding:20px;
+box-shadow:0 4px 12px rgba(15,23,42,.04)
+}
+
+.suporte-item strong{
+display:block;
+margin-top:6px;
+font-size:18px;
+color:#0f172a;
+word-break:break-word
+}
+
+.suporte-item p{
+color:#64748b
+}
+
+.suporte-badge{
+display:inline-block;
+margin-top:8px;
+padding:7px 12px;
+border-radius:999px;
+background:#dbeafe;
+color:#1d4ed8;
+font-weight:800
+}
+
+/* INSTALAÇÃO */
+
+.instalar-app{
+display:none;
+position:fixed;
+left:14px;
+right:14px;
+bottom:14px;
+z-index:10000;
+background:#0f172a;
+color:#fff;
+border:1px solid #334155;
+border-radius:18px;
+padding:14px;
+box-shadow:0 15px 40px rgba(0,0,0,.28);
+align-items:center;
+gap:12px
+}
+
+.instalar-app.ativo{
+display:flex
+}
+
+.instalar-app-info{
+flex:1;
+min-width:0
+}
+
+.instalar-app-info strong{
+display:block;
+font-size:15px
+}
+
+.instalar-app-info small{
+display:block;
+color:#cbd5e1;
+margin-top:2px
+}
+
+.instalar-app .btn{
+padding:10px 14px;
+white-space:nowrap
+}
+
+.btn-fechar-instalar{
+background:#334155;
+color:#fff;
+border:0;
+border-radius:9px;
+width:36px;
+height:36px;
+font-size:18px;
+cursor:pointer
+}
+
+@media(max-width:850px){
+.pedidos-colunas{grid-template-columns:1fr}
+.pedidos-fluxo{grid-template-columns:repeat(2,1fr)}
+}
+
+@media(max-width:600px){
+body{font-size:16px}
+header h1{font-size:26px}
+main{padding:16px 12px 35px}
+.titulo-modulo{font-size:26px}
+.menu{
+justify-content:flex-start;
+overflow-x:auto;
+flex-wrap:nowrap;
+padding:12px
+}
+.menu-btn{white-space:nowrap}
+
+.resumo{
+grid-template-columns:repeat(2,minmax(0,1fr));
+gap:11px
+}
+
+.resumo-card{padding:16px}
+.resumo-card strong{font-size:25px}
+.mesas-grid{grid-template-columns:1fr}
+.modal{padding:12px}
+.modal-conteudo{padding:19px}
+.mensagem{
+left:12px;
+right:12px;
+bottom:12px;
+max-width:none
+}
+
+.produto-card-com-foto{grid-template-columns:1fr}
+.produto-foto-card{
+width:100%;
+height:210px
+}
+
+.preview-foto{
+width:110px;
+height:110px
+}
+
+.delivery-produto{
+grid-template-columns:60px 1fr
+}
+
+.delivery-quantidade{
+grid-column:1/-1;
+justify-content:flex-start
+}
+
+.painel-grid{
+grid-template-columns:repeat(2,minmax(0,1fr));
+gap:11px
+}
+
+.painel-card{padding:16px}
+.painel-card strong{font-size:24px}
+
+.pedidos-fluxo{
+grid-template-columns:repeat(2,1fr);
+gap:9px
+}
+
+.pedido-etapa{padding:12px}
+.pedido-etapa strong{font-size:21px}
+
+.pedido-cabecalho{
+flex-direction:column
+}
+}
+
+@media(max-width:380px){
+.resumo{grid-template-columns:1fr}
+.painel-grid{grid-template-columns:1fr}
+.pedidos-fluxo{grid-template-columns:1fr}
+}
+
+@media print{
+.menu,.btn,.acoes,.relatorio-filtros,.instalar-app{display:none!important}
+.modulo{display:none!important}
+#modulo-relatorios{display:block!important}
+}
+
+.recurso-clicavel{
+width:100%;
+text-align:left;
+font:inherit;
+color:inherit;
+cursor:pointer;
+appearance:none;
+-webkit-appearance:none;
+transition:.2s;
+}
+.recurso-clicavel:hover{
+transform:translateY(-3px);
+box-shadow:0 10px 24px rgba(15,23,42,.10);
+border-color:#93c5fd;
+}
+.recurso-clicavel:active{transform:translateY(-1px);}
+.recurso-clicavel:focus-visible{
+outline:3px solid rgba(37,99,235,.25);
+outline-offset:2px;
+}
+
+/* =========================
+   NOVOS RECURSOS OPERACIONAIS
+========================= */
+.recurso-comercial.recurso-clicavel{border:1px solid #e2e8f0;background:#fff}
+.recurso-comercial.recurso-clicavel[data-recurso-modulo]{cursor:pointer}
+.recurso-comercial.recurso-clicavel[data-recurso-modulo]:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(15,23,42,.10);border-color:#93c5fd}
+.recurso-comercial.recurso-clicavel[data-recurso-modulo]:focus-visible{outline:3px solid rgba(37,99,235,.25);outline-offset:2px}
+.recurso-status{display:inline-block;margin-top:9px;padding:5px 9px;border-radius:999px;background:#dcfce7;color:#166534;font-size:12px;font-weight:800}
+.recurso-status.amarelo{background:#fef3c7;color:#92400e}
+.recurso-status.azul{background:#dbeafe;color:#1e40af}
+.recurso-status.roxo{background:#ede9fe;color:#6d28d9}
+.recurso-painel{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:20px}
+.recurso-kpi{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:18px;box-shadow:0 4px 12px rgba(15,23,42,.05)}
+.recurso-kpi strong{display:block;font-size:27px;color:#0f172a;margin-top:5px}
+.qr-area{display:grid;grid-template-columns:260px 1fr;gap:22px;align-items:center}
+.qr-box{min-height:260px;border:2px dashed #bfdbfe;border-radius:18px;background:#f8fafc;display:flex;align-items:center;justify-content:center;padding:15px;text-align:center}
+.qr-box img{max-width:230px;width:100%;border-radius:10px;background:#fff}
+.menu-digital-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:15px}
+.menu-digital-card{background:#fff;border:1px solid #e2e8f0;border-radius:17px;overflow:hidden;box-shadow:0 4px 13px rgba(15,23,42,.05)}
+.menu-digital-card img,.menu-digital-foto{width:100%;height:155px;object-fit:cover;background:#eef2f7;display:flex;align-items:center;justify-content:center;font-size:50px}
+.menu-digital-info{padding:15px}.menu-digital-info h3{margin:0 0 5px}.menu-digital-info p{color:#64748b;font-size:14px;margin:4px 0 10px}.menu-digital-preco{font-size:21px;font-weight:900;color:#1d4ed8}
+.dre-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.dre-linha{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid #e8edf3}.dre-total{font-size:22px;font-weight:900;padding-top:14px}.positivo{color:#15803d}.negativo{color:#b91c1c}
+.fiscal-status{padding:15px;border-radius:14px;border:1px solid #bfdbfe;background:#eff6ff;color:#1e40af;margin-bottom:16px}.fiscal-status.ok{border-color:#bbf7d0;background:#f0fdf4;color:#166534}
+.qr-client-link{word-break:break-all;background:#f8fafc;border:1px solid #e2e8f0;padding:12px;border-radius:10px;font-size:13px}
+@media(max-width:700px){.qr-area,.dre-grid{grid-template-columns:1fr}.qr-box{min-height:230px}}
+
+
+/* =========================
+   LOGIN / CONTAS GASTROFLOW
+========================= */
+#telaLogin{position:fixed;inset:0;z-index:20000;background:linear-gradient(135deg,#0f172a,#1e3a8a);display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto}
+.login-card{width:100%;max-width:430px;background:#fff;border-radius:24px;padding:30px;box-shadow:0 25px 80px rgba(0,0,0,.35)}
+.login-logo{text-align:center;font-size:54px;margin-bottom:5px}.login-card h2{text-align:center;margin:0;color:#0f172a;font-size:28px}.login-card .login-sub{text-align:center;color:#64748b;margin:7px 0 22px}
+.login-card .login-field{margin-bottom:14px}.login-card .login-field label{margin-bottom:6px}.login-card .btn{width:100%;margin-top:8px}
+.login-secundario{width:100%;border:0;background:transparent;color:#2563eb;font-weight:800;padding:12px;cursor:pointer;margin-top:7px}
+.login-erro{display:none;background:#fef2f2;color:#991b1b;border:1px solid #fecaca;border-radius:11px;padding:12px;margin-bottom:14px;font-weight:700}.login-info{font-size:12px;color:#64748b;text-align:center;margin-top:15px;line-height:1.45}
+#barraUsuario{display:none;position:fixed;right:14px;top:14px;z-index:10001;background:#fff;border:1px solid #dbeafe;border-radius:12px;padding:8px 10px;box-shadow:0 5px 18px rgba(15,23,42,.15);align-items:center;gap:8px;max-width:calc(100vw - 28px)}
+#barraUsuario small{color:#475569;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.perfil-badge{display:inline-flex;align-items:center;padding:4px 7px;border-radius:999px;background:#fef3c7;color:#92400e;font-size:12px;font-weight:900}.perfil-badge.usuario{background:#e2e8f0;color:#475569}
+.admin-only{display:none!important}.admin-only.admin-visivel{display:flex!important}.modulo.admin-only.admin-visivel{display:block!important}.btn-logout{border:0;border-radius:8px;padding:7px 10px;background:#ef4444;color:#fff;font-weight:800;cursor:pointer}
+body.gastro-bloqueado>header,body.gastro-bloqueado>nav,body.gastro-bloqueado>main,body.gastro-bloqueado>.mensagem,body.gastro-bloqueado>.instalar-app,body.gastro-bloqueado>#barraUsuario{visibility:hidden}
+@media(max-width:600px){.login-card{padding:23px;border-radius:20px}#barraUsuario{left:12px;right:12px;justify-content:space-between}.login-card h2{font-size:24px}}
+
+</style>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+</head>
+
+<body class="gastro-bloqueado">
+<div id="telaLogin" aria-label="Acesso ao GastroFlow">
+  <div class="login-card">
+    <div class="login-logo">🍽️</div>
+    <h2>GastroFlow</h2>
+    <p class="login-sub" id="loginTitulo">Entre para acessar seu estabelecimento</p>
+    <div id="loginErro" class="login-erro"></div>
+    <form id="formLogin">
+      <div class="login-field">
+        <label for="loginEmail">E-mail</label>
+        <input id="loginEmail" type="email" autocomplete="email" placeholder="seu@email.com" required>
+      </div>
+      <div class="login-field">
+        <label for="loginSenha">Senha</label>
+        <input id="loginSenha" type="password" autocomplete="current-password" placeholder="Mínimo de 6 caracteres" minlength="6" required>
+      </div>
+      <button class="btn btn-primary" id="btnEntrar" type="submit">🔐 Entrar</button>
+    </form>
+    <button type="button" class="login-secundario" id="btnCriarConta">➕ Criar minha conta</button>
+    <button type="button" class="login-secundario" id="btnEsqueciSenha">📧 Esqueci minha senha</button>
+    <p class="login-info">Cada conta possui seus próprios dados. O acesso é protegido pelo Firebase Authentication.</p>
+  </div>
+</div>
+
+<div id="barraUsuario">
+  <small id="usuarioLogado"></small>
+  <span id="usuarioPerfil" class="perfil-badge usuario">USUÁRIO</span>
+  <button type="button" class="btn-logout" id="btnSair">Sair</button>
+</div>
+
+
+<header>
+<h1>🍽️ GastroFlow</h1>
+<p>Gestão completa para bar, restaurante, mesas e delivery</p>
+</header>
+
+<nav class="menu">
+<button type="button" class="menu-btn" data-modulo="painel">🏠 Painel</button>
+<button type="button" class="menu-btn" data-modulo="produtos">📦 Produtos</button>
+<button type="button" class="menu-btn" data-modulo="estoque">🏪 Estoque</button>
+<button type="button" class="menu-btn" data-modulo="mesas">🪑 Mesa/Comanda</button>
+<button type="button" class="menu-btn" data-modulo="pedidos">🧾 Pedidos</button>
+<button type="button" class="menu-btn" data-modulo="preparo">🔥 Em preparo</button>
+<button type="button" class="menu-btn" data-modulo="pronto">✅ Pronto</button>
+<button type="button" class="menu-btn" data-modulo="entregue">📦 Entregue</button>
+<button type="button" class="menu-btn" data-modulo="delivery">🛵 Delivery</button>
+<button type="button" class="menu-btn" data-modulo="caixa">💰 Caixa</button>
+<button type="button" class="menu-btn" data-modulo="relatorios">📊 Relatórios</button>
+<button type="button" class="menu-btn" data-modulo="suporte">📞 Contato e Suporte</button>
+<button type="button" class="menu-btn" data-modulo="backup">💾 Backup</button>
+<button type="button" id="btnMenuAdmin" class="menu-btn admin-only" data-modulo="admin">👑 Administrador</button>
+<button type="button" class="menu-btn" data-modulo="cardapio">🍔 Cardápio Digital</button>
+<button type="button" class="menu-btn" data-modulo="financeiro">💰 Financeiro/DRE</button>
+<button type="button" class="menu-btn" data-modulo="fiscal">🧾 Fiscal</button>
+<button type="button" class="menu-btn" data-modulo="garcom">📱 Garçom/QR Code</button>
+</nav>
+
+<main>
+
+<section id="modulo-painel" class="modulo ativo">
+<h2 class="titulo-modulo">🏠 Painel Inicial</h2>
+
+<div class="painel-boas-vindas">
+<h3>Bem-vindo ao GastroFlow 👋</h3>
+<p>Acompanhe rapidamente o movimento do seu estabelecimento.</p>
+</div>
+
+<div class="painel-grid">
+<div class="painel-card azul">
+💰 Vendas do dia
+<strong id="painelVendasDia">R$ 0,00</strong>
+<small>Faturamento recebido hoje</small>
+</div>
+
+<div class="painel-card verde">
+🧾 Vendas
+<strong id="painelQuantidadeVendas">0</strong>
+<small>Vendas recebidas hoje</small>
+</div>
+
+<div class="painel-card laranja">
+🪑 Mesas abertas
+<strong id="painelMesasAbertas">0</strong>
+<small>Mesas em atendimento</small>
+</div>
+
+<div class="painel-card roxo">
+🛵 Delivery
+<strong id="painelPedidosDelivery">0</strong>
+<small>Pedidos em andamento</small>
+</div>
+
+<div class="painel-card vermelho">
+📦 Estoque baixo
+<strong id="painelEstoqueBaixo">0</strong>
+<small>Produtos precisam de atenção</small>
+</div>
+
+<div class="painel-card teal">
+📈 Lucro estimado
+<strong id="painelLucroDia">R$ 0,00</strong>
+<small>Lucro estimado das vendas de hoje</small>
+</div>
+</div>
+
+<div class="card">
+<h3>⚡ Acesso rápido</h3>
+
+<div class="painel-acoes">
+<button type="button" class="btn btn-primary" data-painel-modulo="mesas">🪑 Abrir mesas</button>
+<button type="button" class="btn btn-success" data-painel-modulo="delivery">🛵 Delivery</button>
+<button type="button" class="btn btn-warning" data-painel-modulo="estoque">📦 Ver estoque</button>
+<button type="button" class="btn btn-relatorio" data-painel-modulo="relatorios">📊 Relatórios</button>
+
+</div>
+
+<div class="card recursos-comerciais">
+<h3>✨ Recursos do GastroFlow</h3>
+<p class="recursos-intro">
+Tudo o que seu estabelecimento precisa para organizar a operação em uma experiência simples.
+</p>
+
+<div class="recursos-grid">
+
+<button type="button" class="recurso-comercial recurso-clicavel" data-recurso-modulo="cardapio" aria-label="Abrir Cardápio Digital">
+<div class="recurso-icone">🍔</div>
+<div>
+<span class="recurso-categoria">CARDÁPIO DIGITAL</span>
+<strong>Apresente produtos, adicionais e disponibilidade em uma jornada simples.</strong>
+<span class="recurso-status">ATIVO</span>
+</div>
+</button>
+
+<button type="button" class="recurso-comercial recurso-clicavel" data-recurso-modulo="estoque" aria-label="Abrir Estoque">
+<div class="recurso-icone">📦</div>
+<div>
+<span class="recurso-categoria">CONTROLE</span>
+<strong>Estoque</strong>
+<p>Controle entradas, saídas e itens críticos com visão integrada.</p>
+</div>
+</button>
+
+<button type="button" class="recurso-comercial recurso-clicavel" data-recurso-modulo="relatorios" aria-label="Abrir Financeiro e DRE">
+<div class="recurso-icone">💰</div>
+<div>
+<span class="recurso-categoria">GESTÃO</span>
+<strong>Financeiro e DRE</strong>
+<p>Enxergue receitas, despesas e resultado com mais clareza.</p>
+</div>
+</button>
+
+<button type="button" class="recurso-comercial recurso-clicavel" data-recurso-modulo="fiscal" aria-label="Abrir Emissão Fiscal">
+<div class="recurso-icone">🧾</div>
+<div>
+<span class="recurso-categoria">FISCAL</span>
+<strong>Emissão fiscal</strong>
+<p>Prepare a operação para emitir documentos fiscais no fluxo de venda.</p>
+<span class="recurso-status amarelo">INTEGRAÇÃO NECESSÁRIA</span>
+</div>
+</button>
+
+<button type="button" class="recurso-comercial recurso-clicavel" data-recurso-modulo="garcom" aria-label="Abrir Garçom Digital e QR Code">
+<div class="recurso-icone">📱</div>
+<div>
+<span class="recurso-categoria">MOBILIDADE</span>
+<strong>Garçom digital e QR Code</strong>
+<p>Dê mobilidade ao atendimento e autonomia ao cliente.</p>
+<span class="recurso-status azul">ATIVO NO DISPOSITIVO</span>
+</div>
+</button>
+
+</div>
+</div>
+</section>
+
+<section id="modulo-produtos" class="modulo">
+<h2 class="titulo-modulo">📦 Produtos</h2>
+
+<div class="card">
+<form id="formProduto">
+
+<div class="form-grid">
+
+<div>
+<label>Nome do produto</label>
+<input id="produtoNome" required>
+</div>
+
+<div>
+<label>Categoria</label>
+<input id="produtoCategoria">
+</div>
+
+<div>
+<label>Preço de venda</label>
+<input id="produtoPreco" type="number" step="0.01" min="0" required>
+</div>
+
+<div>
+<label>Custo</label>
+<input id="produtoCusto" type="number" step="0.01" min="0">
+</div>
+
+<div>
+<label>Estoque inicial</label>
+<input id="produtoEstoque" type="number" step="0.01" min="0">
+</div>
+
+<div>
+<label>Estoque mínimo</label>
+<input id="produtoEstoqueMinimo" type="number" step="0.01" min="0">
+</div>
+
+<div class="foto-produto-area">
+
+<div class="preview-foto" id="previewFoto">
+<div class="preview-foto-vazia">📷<br>Sem foto</div>
+</div>
+
+<div class="foto-produto-acoes">
+<label>📸 Foto do produto</label>
+<input id="produtoFoto" type="file" accept="image/*">
+
+<p style="color:#64748b;margin-bottom:0">
+Escolha uma foto da galeria ou tire uma foto pelo celular.
+</p>
+
+<div class="acoes">
+<button type="button" class="btn btn-danger" id="btnRemoverFoto">
+🗑️ Remover foto
+</button>
+</div>
+
+</div>
+</div>
+
+</div>
+
+<div class="acoes">
+<button class="btn btn-primary" id="btnSalvar" type="submit">
+💾 Salvar Produto
+</button>
+
+<button class="btn btn-secondary" id="btnCancelar" type="button">
+Cancelar
+</button>
+</div>
+
+</form>
+</div>
+
+<div class="resumo">
+<div class="resumo-card">
+Produtos cadastrados
+<strong id="totalProdutos">0</strong>
+</div>
+
+<div class="resumo-card">
+Produtos ativos
+<strong id="produtosAtivos">0</strong>
+</div>
+
+<div class="resumo-card">
+Produtos estoque baixo
+<strong id="produtosEstoqueBaixo">0</strong>
+</div>
+
+<div class="resumo-card">
+Total de unidades
+<strong id="totalUnidades">0</strong>
+</div>
+</div>
+
+<div class="card">
+<input id="buscaProduto" placeholder="🔎 Buscar produto...">
+</div>
+
+<div id="listaProdutos" class="lista"></div>
+</section>
+
+<section id="modulo-estoque" class="modulo">
+
+<h2 class="titulo-modulo">🏪 Estoque</h2>
+
+<div class="card">
+
+<form id="formMovimentacao">
+
+<div class="form-grid">
+
+<div>
+<label>Produto</label>
+<select id="estoqueProduto" required></select>
+</div>
+
+<div>
+<label>Tipo</label>
+<select id="tipoMovimentacao">
+<option value="entrada">Entrada</option>
+<option value="saida">Saída</option>
+<option value="ajuste">Ajuste</option>
+</select>
+</div>
+
+<div>
+<label>Quantidade</label>
+<input id="quantidadeMovimentacao" type="number" min="0" step="0.01" required>
+</div>
+
+<div>
+<label>Motivo</label>
+<input id="motivoMovimentacao">
+</div>
+
+</div>
+
+<div class="acoes">
+<button class="btn btn-primary" type="submit">
+💾 Registrar movimentação
+</button>
+</div>
+
+</form>
+
+<div style="margin-top:20px">
+
+<h3>Produto selecionado</h3>
+
+<div class="resumo">
+
+<div class="resumo-card">
+Estoque atual
+<strong id="estoqueAtualSelecionado">0</strong>
+</div>
+
+<div class="resumo-card">
+Quantidade
+<strong id="quantidadeEstoqueSelecionado">0</strong>
+</div>
+
+</div>
+
+<div id="alertaEstoqueSelecionado"></div>
+
+</div>
+</div>
+
+<div class="card">
+<input id="buscaEstoque" placeholder="🔎 Buscar no estoque...">
+</div>
+
+<div id="listaEstoque" class="lista"></div>
+
+<div class="card">
+<h3>📋 Histórico de estoque</h3>
+<div id="historicoEstoque"></div>
+</div>
+
+</section>
+
+<section id="modulo-mesas" class="modulo">
+
+<h2 class="titulo-modulo">🪑 Mesa / Comanda</h2>
+
+<div class="card">
+<p>
+O GastroFlow possui <strong>500 mesas/comandas</strong>.
+Abra uma mesa, registre os produtos e acompanhe todo o pedido.
+</p>
+</div>
+
+<div id="listaMesas" class="mesas-grid"></div>
+
+</section>
+
+<section id="modulo-pedidos" class="modulo">
+
+<h2 class="titulo-modulo">🧾 Pedidos</h2>
+
+<div class="pedidos-fluxo">
+
+<div class="pedido-etapa">
+<span>🟡</span>
+<strong id="fluxoPendentes">0</strong>
+<small>Pendentes</small>
+</div>
+
+<div class="pedido-etapa">
+<span>🔥</span>
+<strong id="fluxoPreparo">0</strong>
+<small>Em preparo</small>
+</div>
+
+<div class="pedido-etapa">
+<span>✅</span>
+<strong id="fluxoProntos">0</strong>
+<small>Prontos</small>
+</div>
+
+<div class="pedido-etapa">
+<span>📦</span>
+<strong id="fluxoEntregues">0</strong>
+<small>Entregues</small>
+</div>
+
+</div>
+
+<div class="resumo">
+
+<div class="resumo-card">
+Pendentes
+<strong id="pedidosPendentes">0</strong>
+</div>
+
+<div class="resumo-card">
+Em preparo
+<strong id="pedidosEmPreparo">0</strong>
+</div>
+
+<div class="resumo-card">
+Total de itens
+<strong id="pedidosTotalItens">0</strong>
+</div>
+
+</div>
+
+<div id="listaPedidos" class="lista"></div>
+
+</section>
+
+<section id="modulo-preparo" class="modulo">
+
+<h2 class="titulo-modulo">🔥 Em preparo</h2>
+
+<div class="resumo">
+
+<div class="resumo-card">
+Mesas
+<strong id="mesasEmPreparo">0</strong>
+</div>
+
+<div class="resumo-card">
+Itens
+<strong id="itensEmPreparo">0</strong>
+</div>
+
+<div class="resumo-card">
+Produtos
+<strong id="produtosEmPreparo">0</strong>
+</div>
+
+</div>
+
+<div id="listaPreparo" class="lista"></div>
+
+</section>
+
+<section id="modulo-pronto" class="modulo">
+
+<h2 class="titulo-modulo">✅ Pronto</h2>
+
+<div class="resumo">
+
+<div class="resumo-card">
+Mesas
+<strong id="mesasProntas">0</strong>
+</div>
+
+<div class="resumo-card">
+Itens
+<strong id="itensProntos">0</strong>
+</div>
+
+<div class="resumo-card">
+Produtos
+<strong id="produtosProntos">0</strong>
+</div>
+
+</div>
+
+<div id="listaPronto" class="lista"></div>
+
+</section>
+
+<section id="modulo-entregue" class="modulo">
+
+<h2 class="titulo-modulo">📦 Entregue</h2>
+
+<div class="resumo">
+
+<div class="resumo-card">
+Mesas
+<strong id="mesasEntregues">0</strong>
+</div>
+
+<div class="resumo-card">
+Itens
+<strong id="itensEntregues">0</strong>
+</div>
+
+<div class="resumo-card">
+Produtos
+<strong id="produtosEntregues">0</strong>
+</div>
+
+</div>
+
+<div id="listaEntregue" class="lista"></div>
+
+</section>
+
+<section id="modulo-delivery" class="modulo">
+
+<h2 class="titulo-modulo">🛵 Delivery</h2>
+
+<div class="card">
+
+<h3>🛵 Novo pedido de delivery</h3>
+
+<p>
+Cadastre o cliente, escolha os produtos e acompanhe o pedido até a entrega.
+</p>
+
+<form id="formDelivery">
+
+<div class="form-grid">
+
+<div>
+<label>👤 Nome do cliente</label>
+<input id="deliveryCliente" required>
+</div>
+
+<div>
+<label>📱 Telefone</label>
+<input id="deliveryTelefone" type="tel" placeholder="(00) 00000-0000" required>
+</div>
+
+<div style="grid-column:1/-1">
+<label>📍 Endereço de entrega</label>
+<input id="deliveryEndereco" placeholder="Rua, número, bairro..." required>
+</div>
+
+<div>
+<label>💳 Forma de pagamento</label>
+
+<select id="deliveryPagamento" required>
+<option value="">Selecione</option>
+<option>Dinheiro</option>
+<option>Cartão de débito</option>
+<option>Cartão de crédito</option>
+<option>Pix</option>
+</select>
+
+</div>
+
+<div style="grid-column:1/-1">
+
+<label>📝 Observação</label>
+
+<textarea
+id="deliveryObservacao"
+placeholder="Ex.: sem cebola, troco para R$ 100..."
+></textarea>
+
+</div>
+
+</div>
+
+<h3 style="margin-top:25px">
+🍔 Produtos do pedido
+</h3>
+
+<div id="listaProdutosDelivery"></div>
+
+<div class="delivery-total">
+Total do pedido
+<strong id="deliveryTotal">R$ 0,00</strong>
+</div>
+
+<div class="acoes">
+
+<button class="btn btn-success" type="submit">
+🛵 Criar pedido de delivery
+</button>
+
+<button class="btn btn-secondary" type="button" id="btnLimparDelivery">
+🧹 Limpar
+</button>
+
+</div>
+
+</form>
+</div>
+
+<div class="resumo">
+
+<div class="resumo-card">
+🆕 Novos
+<strong id="deliveryNovos">0</strong>
+</div>
+
+<div class="resumo-card">
+🔥 Em preparo
+<strong id="deliveryPreparo">0</strong>
+</div>
+
+<div class="resumo-card">
+✅ Prontos
+<strong id="deliveryProntos">0</strong>
+</div>
+
+<div class="resumo-card">
+🛵 Em entrega
+<strong id="deliverySaiu">0</strong>
+</div>
+
+</div>
+
+<div id="listaDelivery" class="lista"></div>
+
+</section>
+
+<section id="modulo-caixa" class="modulo">
+
+<h2 class="titulo-modulo">💰 Caixa</h2>
+
+<div class="card">
+
+<h3>Contas aguardando recebimento</h3>
+
+<p>
+A mesa só poderá ser recebida quando todos os produtos estiverem marcados como
+<strong>Entregue</strong>.
+</p>
+
+</div>
+
+<div id="listaCaixa" class="lista"></div>
+
+<div class="card">
+
+<h3>💵 Vendas recebidas</h3>
+
+<div id="historicoCaixa"></div>
+
+</div>
+
+</section>
+
+<section id="modulo-relatorios" class="modulo">
+
+<h2 class="titulo-modulo">📊 Relatórios</h2>
+
+<div class="card">
+
+<h3>📅 Período do relatório</h3>
+
+<div class="form-grid">
+
+<div>
+<label>Data inicial</label>
+<input type="date" id="relatorioDataInicio">
+</div>
+
+<div>
+<label>Data final</label>
+<input type="date" id="relatorioDataFim">
+</div>
+
+</div>
+
+<div class="periodo-rapido">
+
+<button type="button" class="btn btn-relatorio" id="btnRelatorioHoje">
+📅 Hoje
+</button>
+
+<button type="button" class="btn btn-relatorio" id="btnRelatorio7Dias">
+📅 Últimos 7 dias
+</button>
+
+<button type="button" class="btn btn-relatorio" id="btnRelatorioMes">
+📅 Mês atual
+</button>
+
+</div>
+
+<div class="acoes">
+
+<button type="button" class="btn btn-primary" id="btnAtualizarRelatorios">
+🔄 Atualizar relatório
+</button>
+
+<button type="button" class="btn btn-secondary" id="btnLimparRelatorios">
+🧹 Limpar período
+</button>
+
+<button type="button" class="btn btn-imprimir" id="btnImprimirRelatorio">
+🖨️ Imprimir relatório
+</button>
+
+</div>
+
+</div>
+
+<div class="resumo">
+
+<div class="resumo-card relatorio-destaque">
+💰 Faturamento
+<strong id="relatorioFaturamento">R$ 0,00</strong>
+</div>
+
+<div class="resumo-card">
+🧾 Vendas
+<strong id="relatorioQuantidadeVendas">0</strong>
+</div>
+
+<div class="resumo-card">
+🎟️ Ticket médio
+<strong id="relatorioTicketMedio">R$ 0,00</strong>
+</div>
+
+<div class="resumo-card">
+🪑 Mesas atendidas
+<strong id="relatorioMesas">0</strong>
+</div>
+
+</div>
+
+<div class="resumo">
+
+<div class="resumo-card">
+📦 Itens vendidos
+<strong id="relatorioItensVendidos">0</strong>
+</div>
+
+<div class="resumo-card">
+💵 Custo das vendas
+<strong id="relatorioCusto">R$ 0,00</strong>
+</div>
+
+<div class="resumo-card relatorio-lucro">
+📈 Lucro estimado
+<strong id="relatorioLucro">R$ 0,00</strong>
+</div>
+
+<div class="resumo-card">
+📦 Produtos cadastrados
+<strong id="relatorioProdutos">0</strong>
+</div>
+
+</div>
+
+<div class="card">
+<h3>💳 Vendas por forma de pagamento</h3>
+<div id="relatorioPagamentos"></div>
+</div>
+
+<div class="card">
+
+<h3>🏆 Produtos mais vendidos</h3>
+
+<div class="tabela-container">
+
+<table class="tabela">
+
+<thead>
+<tr>
+<th>Produto</th>
+<th>Quantidade</th>
+<th>Faturamento</th>
+<th>Custo</th>
+<th>Lucro</th>
+</tr>
+</thead>
+
+<tbody id="relatorioProdutosVendidos"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<div class="card relatorio-alerta">
+
+<h3>⚠️ Estoque baixo</h3>
+
+<div id="relatorioEstoqueBaixo"></div>
+
+</div>
+
+<div class="card">
+
+<h3>🧾 Vendas do período</h3>
+
+<div id="relatorioHistoricoVendas"></div>
+
+</div>
+
+</section>
+
+
+<section id="modulo-cardapio" class="modulo">
+<h2 class="titulo-modulo">🍔 Cardápio Digital</h2>
+<div class="recurso-painel">
+<div class="recurso-kpi">Produtos disponíveis<strong id="cardapioDisponiveis">0</strong></div>
+<div class="recurso-kpi">Categorias<strong id="cardapioCategorias">0</strong></div>
+<div class="recurso-kpi">Indisponíveis<strong id="cardapioIndisponiveis">0</strong></div>
+</div>
+<div class="card">
+<h3>⚙️ Configuração do cardápio</h3>
+<div class="form-grid">
+<div><label>Nome exibido</label><input id="cardapioNome" placeholder="Meu Restaurante"></div>
+<div><label>Mensagem</label><input id="cardapioMensagem" placeholder="Escolha seu pedido"></div>
+</div>
+<div class="acoes"><button type="button" class="btn btn-primary" id="btnSalvarCardapio">💾 Salvar cardápio</button><button type="button" class="btn btn-secondary" id="btnAtualizarCardapio">🔄 Atualizar</button></div>
+</div>
+<div class="card"><input id="buscaCardapio" placeholder="🔎 Buscar no cardápio..."></div>
+<div id="listaCardapio" class="menu-digital-grid"></div>
+</section>
+
+<section id="modulo-financeiro" class="modulo">
+<h2 class="titulo-modulo">💰 Financeiro e DRE</h2>
+<div class="recurso-painel">
+<div class="recurso-kpi">Receitas<strong id="finReceitas">R$ 0,00</strong></div>
+<div class="recurso-kpi">Despesas<strong id="finDespesas">R$ 0,00</strong></div>
+<div class="recurso-kpi">Resultado<strong id="finResultado">R$ 0,00</strong></div>
+<div class="recurso-kpi">Vendas<strong id="finVendas">0</strong></div>
+</div>
+<div class="card"><h3>➕ Registrar despesa</h3><form id="formDespesa"><div class="form-grid"><div><label>Descrição</label><input id="despesaDescricao" required></div><div><label>Categoria</label><select id="despesaCategoria"><option>Aluguel</option><option>Salários</option><option>Fornecedores</option><option>Energia</option><option>Água</option><option>Marketing</option><option>Impostos</option><option>Outros</option></select></div><div><label>Valor</label><input id="despesaValor" type="number" min="0" step="0.01" required></div><div><label>Data</label><input id="despesaData" type="date" required></div></div><div class="acoes"><button class="btn btn-danger" type="submit">💾 Lançar despesa</button></div></form></div>
+<div class="card"><h3>📊 DRE simplificado</h3><div id="dreResumo"></div></div>
+<div class="card"><h3>📋 Despesas lançadas</h3><div id="listaDespesas"></div></div>
+</section>
+
+<section id="modulo-fiscal" class="modulo">
+<h2 class="titulo-modulo">🧾 Emissão Fiscal</h2>
+<div class="fiscal-status amarelo">⚠️ O GastroFlow pode preparar e controlar os documentos fiscais, mas a emissão autorizada pela SEFAZ exige integração com um serviço fiscal, certificado digital e credenciais do estabelecimento.</div>
+<div class="card"><h3>⚙️ Configuração fiscal</h3><div class="form-grid"><div><label>Razão social</label><input id="fiscalRazao"></div><div><label>CNPJ</label><input id="fiscalCnpj" placeholder="00.000.000/0000-00"></div><div><label>Inscrição estadual</label><input id="fiscalIe"></div><div><label>Ambiente</label><select id="fiscalAmbiente"><option value="homologacao">Homologação/Testes</option><option value="producao">Produção</option></select></div></div><div class="acoes"><button type="button" class="btn btn-primary" id="btnSalvarFiscal">💾 Salvar configuração</button></div></div>
+<div class="card"><h3>🧾 Documentos fiscais preparados</h3><p>Selecione uma venda recebida para criar um documento fiscal em rascunho.</p><div class="form-grid"><div><label>Venda</label><select id="fiscalVenda"></select></div></div><div class="acoes"><button type="button" class="btn btn-success" id="btnPrepararFiscal">🧾 Preparar documento</button><button type="button" class="btn btn-secondary" id="btnExportarFiscal">📥 Exportar dados fiscais</button></div><div id="listaFiscal" style="margin-top:18px"></div></div>
+</section>
+
+<section id="modulo-garcom" class="modulo">
+<h2 class="titulo-modulo">📱 Garçom Digital e QR Code</h2>
+<div class="card"><h3>📲 QR Code de uma mesa</h3><div class="form-grid"><div><label>Mesa</label><select id="qrMesa"></select></div><div><label>Endereço base</label><input id="qrBaseUrl"></div></div><div class="acoes"><button type="button" class="btn btn-primary" id="btnGerarQR">🔳 Gerar QR Code</button><button type="button" class="btn btn-success" id="btnCopiarQR">📋 Copiar link</button></div><div class="qr-area" style="margin-top:20px"><div class="qr-box" id="qrPreview">Escolha uma mesa e gere o QR Code.</div><div><h3>Como funciona</h3><p>O QR identifica a mesa e abre o endereço do modo de atendimento. Nesta versão, o pedido usa os dados locais do dispositivo. Para atendimento em vários celulares ao mesmo tempo, o próximo passo é conectar o GastroFlow a um banco de dados online.</p><div class="qr-client-link" id="qrLink">Nenhum link gerado.</div></div></div></div>
+<div class="card"><h3>👨‍🍳 Atendimento rápido do garçom</h3><div id="garcomMesas" class="mesas-grid"></div></div>
+</section>
+
+<section id="modulo-suporte" class="modulo">
+
+<h2 class="titulo-modulo">📞 Contato e Suporte</h2>
+
+<div class="card suporte-destaque">
+
+<div class="suporte-icone">🛟</div>
+
+<h3>Suporte GastroFlow</h3>
+
+<p>
+Precisa de ajuda com o GastroFlow? Entre em contato com nossa equipe.
+</p>
+
+<span class="suporte-badge">Floweficaz</span>
+
+<div class="suporte-grid">
+
+<div class="suporte-item">
+
+<div style="font-size:32px">📧</div>
+
+<h3>E-mail</h3>
+
+<strong>Morali230@mail.com</strong>
+
+<div class="acoes">
+
+<a
+class="btn btn-primary"
+href="mailto:Morali230@mail.com">
+✉️ Enviar e-mail
+</a>
+
+</div>
+
+</div>
+
+<div class="suporte-item">
+
+<div style="font-size:32px">📱</div>
+
+<h3>WhatsApp / Contato</h3>
+
+<strong>+55 63 99201-9872</strong>
+
+<div class="acoes">
+
+<a
+class="btn btn-success"
+href="https://wa.me/5563992019872"
+target="_blank"
+rel="noopener noreferrer">
+💬 Falar no WhatsApp
+</a>
+
+</div>
+
+</div>
+
+<div class="suporte-item">
+
+<div style="font-size:32px">🛟</div>
+
+<h3>Atendimento</h3>
+
+<strong>Floweficaz</strong>
+
+<p>
+Suporte para dúvidas, orientações e problemas relacionados ao GastroFlow.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>📋 Informações de suporte</h3>
+
+<p><strong>📧 E-mail:</strong> Morali230@mail.com</p>
+
+<p><strong>📱 WhatsApp:</strong> +55 63 99201-9872</p>
+
+<p><strong>🛟 Suporte:</strong> Floweficaz</p>
+
+<div class="alerta alerta-ok">
+✅ Entre em contato sempre que precisar de ajuda.
+</div>
+
+</div>
+
+</section>
+
+<section id="modulo-backup" class="modulo">
+
+<h2 class="titulo-modulo">💾 Backup e Restauração</h2>
+
+<div class="card backup-destaque">
+
+<div class="backup-icone">🛡️</div>
+
+<h3>Proteja os dados do GastroFlow</h3>
+
+<p>
+Faça uma cópia de segurança dos produtos, estoque,
+mesas, vendas, delivery e movimentações do sistema.
+</p>
+
+<div class="acoes">
+
+<button
+type="button"
+class="btn btn-primary"
+id="btnExportarBackup">
+💾 Fazer backup agora
+</button>
+
+<label
+class="btn btn-success"
+style="
+display:inline-flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+">
+
+📥 Restaurar backup
+
+<input
+type="file"
+id="inputRestaurarBackup"
+accept=".json,application/json"
+style="display:none"
+>
+
+</label>
+
+</div>
+
+<div class="alerta alerta-ok">
+💡 Recomendação: guarde o arquivo de backup em outro local,
+como Google Drive, computador ou pendrive.
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>📋 Dados atualmente armazenados</h3>
+
+<div class="resumo">
+
+<div class="resumo-card">
+Produtos
+<strong id="backupProdutos">0</strong>
+</div>
+
+<div class="resumo-card">
+Movimentações
+<strong id="backupMovimentacoes">0</strong>
+</div>
+
+<div class="resumo-card">
+Mesas
+<strong id="backupMesas">500</strong>
+</div>
+
+<div class="resumo-card">
+Vendas
+<strong id="backupVendas">0</strong>
+</div>
+
+<div class="resumo-card">
+Delivery
+<strong id="backupDelivery">0</strong>
+</div>
+
+</div>
+
+</div>
+
+<div class="card backup-aviso">
+
+<h3>⚠️ Atenção</h3>
+
+<p>
+Ao restaurar um backup, os dados atuais do GastroFlow
+serão substituídos pelos dados existentes no arquivo.
+</p>
+
+<p>
+<strong>
+Faça um backup atual antes de restaurar outro arquivo.
+</strong>
+</p>
+
+</div>
+
+</section>
+
+</main>
+
+<div id="modalMesa" class="modal">
+
+<div class="modal-conteudo">
+
+<h2>🪑 Abrir Mesa</h2>
+
+<form id="formMesa">
+
+<input type="hidden" id="mesaId">
+
+<label>Cliente</label>
+<input id="mesaCliente" required>
+
+<br><br>
+
+<label>Comanda</label>
+<input id="mesaComanda" required>
+
+<div class="acoes">
+
+<button class="btn btn-success" type="submit">
+🟢 Abrir Mesa
+</button>
+
+<button class="btn btn-secondary" id="btnCancelarMesa" type="button">
+Cancelar
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+<div id="modalComanda" class="modal">
+
+<div class="modal-conteudo">
+
+<h2 id="tituloComanda">🧾 Comanda</h2>
+
+<div id="dadosComanda"></div>
+
+<hr>
+
+<div class="form-grid">
+
+<div>
+<label>Produto</label>
+<select id="comandaProduto"></select>
+</div>
+
+<div>
+<label>Quantidade</label>
+<input id="comandaQuantidade" type="number" min="1" value="1">
+</div>
+
+</div>
+
+<div class="acoes">
+
+<button class="btn btn-primary" id="btnAdicionarComanda" type="button">
+➕ Adicionar produto
+</button>
+
+</div>
+
+<div id="listaComanda" style="margin-top:20px"></div>
+
+<div class="acoes">
+
+<button class="btn btn-secondary" id="btnFecharComanda" type="button">
+Fechar
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="modalExclusao" class="modal">
+
+<div class="modal-conteudo">
+
+<h2>⚠️ Excluir produto</h2>
+
+<p>Deseja realmente excluir este produto?</p>
+
+<div class="acoes">
+
+<button class="btn btn-danger" id="btnConfirmarExclusao" type="button">
+Sim, excluir
+</button>
+
+<button class="btn btn-secondary" id="btnCancelarExclusao" type="button">
+Cancelar
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="modalPagamento" class="modal">
+
+<div class="modal-conteudo">
+
+<h2>💰 Confirmar recebimento</h2>
+
+<p>Confira os dados da conta antes de finalizar:</p>
+
+<div id="resumoPagamento" class="confirmacao-pagamento"></div>
+
+<div class="acoes" style="display:block">
+
+<button type="button" id="btnConfirmarPagamento" class="btn-confirmar-pagamento">
+✅ Confirmar recebimento
+</button>
+
+<button type="button" id="btnCancelarPagamento" class="btn-cancelar-pagamento">
+Cancelar
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="modalPagamentoDelivery" class="modal">
+
+<div class="modal-conteudo">
+
+<h2>🛵 Finalizar Delivery</h2>
+
+<p>Confira os dados antes de registrar a entrega:</p>
+
+<div id="resumoPagamentoDelivery" class="confirmacao-pagamento"></div>
+
+<div class="acoes" style="display:block">
+
+<button type="button" id="btnConfirmarPagamentoDelivery" class="btn-confirmar-pagamento">
+✅ Confirmar entrega e recebimento
+</button>
+
+<button type="button" id="btnCancelarPagamentoDelivery" class="btn-cancelar-pagamento">
+Cancelar
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<section id="modulo-admin" class="modulo admin-only" aria-label="Administrador">
+  <h2 class="titulo-modulo">👑 Administrador</h2>
+  <div class="card">
+    <h3>Área administrativa</h3>
+    <p>Esta área aparece somente para contas com perfil <strong>admin</strong> no Firebase.</p>
+    <div class="resumo">
+      <div class="resumo-card"><span>👤 Conta</span><strong id="adminConta">-</strong></div>
+      <div class="resumo-card"><span>🔐 Perfil</span><strong id="adminPerfil">-</strong></div>
+    </div>
+  </div>
+</section>
+
+<div id="mensagem" class="mensagem"></div>
+
+<div id="instalarApp" class="instalar-app">
+
+<div class="instalar-app-info">
+<strong>📲 Instalar GastroFlow</strong>
+<small>Tenha o GastroFlow na tela do seu dispositivo.</small>
+</div>
+
+<button type="button" class="btn btn-primary" id="btnInstalarApp">
+Instalar
+</button>
+
+<button type="button" class="btn-fechar-instalar" id="btnFecharInstalar">
+×
+</button>
+
+</div>
+
+<script>
+/* =========================
+   AUTENTICAÇÃO E NUVEM
+========================= */
+const firebaseConfig={
+  apiKey:"AIzaSyBzVWE7IqaaCTGvnmKM8YqmGr0TIcSE2pw",
+  authDomain:"gastroflow-e88f1.firebaseapp.com",
+  projectId:"gastroflow-e88f1",
+  storageBucket:"gastroflow-e88f1.firebasestorage.app",
+  messagingSenderId:"307667503406",
+  appId:"1:307667503406:web:83807c2ef6929e83c9d2bf",
+  databaseURL:"https://gastroflow-e88f1-default-rtdb.firebaseio.com/",
+  measurementId:"G-1VWNKSQJ4E"
+};
+
+let firebasePronto=false;
+let auth=null;
+let banco=null;
+let usuarioAtual=null;
+let perfilUsuario={role:"usuario"};
+let sincronizacaoTimer=null;
+
+function iniciarFirebase(){
+  try{
+    if(!window.firebase) throw new Error("Firebase não carregou. Verifique sua conexão com a internet.");
+    if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    auth=firebase.auth();
+    banco=firebase.database();
+    firebasePronto=true;
+    return true;
+  }catch(e){
+    console.error(e);
+    mostrarErroLogin("Firebase indisponível: "+(e.message||"não foi possível iniciar o serviço."));
+    return false;
+  }
+}
+
+async function carregarPerfilUsuario(usuario){
+  perfilUsuario={role:"usuario"};
+  if(!usuario||!banco)return perfilUsuario;
+
+  const normalizarPerfil=(valor)=>{
+    if(typeof valor==="string") return valor.trim().toLowerCase();
+    if(valor&&typeof valor==="object"){
+      return String(valor.role||valor.perfil||valor.tipo||"").trim().toLowerCase();
+    }
+    return "";
+  };
+
+  try{
+    // Primeiro lê exatamente o caminho usado no Firebase Console:
+    // usuarios/<UID>/perfil
+    const snap=await banco.ref("usuarios/"+usuario.uid+"/perfil").once("value");
+    const role=normalizarPerfil(snap.val());
+    if(role==="admin" || role==="administrador") perfilUsuario.role="admin";
+
+    // Fallback: se o perfil estiver salvo dentro do nó do usuário.
+    if(perfilUsuario.role!=="admin"){
+      const userSnap=await banco.ref("usuarios/"+usuario.uid).once("value");
+      const userData=userSnap.val();
+      const role2=normalizarPerfil(userData&&userData.perfil);
+      if(role2==="admin" || role2==="administrador") perfilUsuario.role="admin";
+    }
+  }catch(e){
+    console.warn("Não foi possível carregar o perfil do usuário:",e);
+  }
+
+  atualizarBadgePerfil();
+  atualizarAcessoAdmin();
+  return perfilUsuario;
+}
+
+function ehAdmin(){
+  return perfilUsuario.role==="admin";
+}
+
+function atualizarBadgePerfil(){
+  const el=document.getElementById("usuarioPerfil");
+  if(!el)return;
+  const admin=ehAdmin();
+  el.textContent=admin?"👑 ADMINISTRADOR":"USUÁRIO";
+  el.className="perfil-badge "+(admin?"":"usuario");
+}
+
+function atualizarAcessoAdmin(){
+  const admin=ehAdmin();
+  document.querySelectorAll(".admin-only").forEach(el=>{
+    if(el.id==="modulo-admin"){
+      el.classList.toggle("admin-visivel",admin);
+    }else{
+      el.classList.toggle("admin-visivel",admin);
+    }
+  });
+  const conta=document.getElementById("adminConta");
+  const perfil=document.getElementById("adminPerfil");
+  if(conta) conta.textContent=usuarioAtual?.email||"-";
+  if(perfil) perfil.textContent=admin?"ADMIN":"USUÁRIO";
+}
+
+function chaveUsuario(chave){
+  return usuarioAtual ? chave+"__"+usuarioAtual.uid : chave;
+}
+function salvarLocal(chave,valor){
+  try{localStorage.setItem(chaveUsuario(chave),valor)}catch(e){console.warn("Não foi possível salvar localmente",e)}
+}
+function lerLocal(chave){
+  try{return localStorage.getItem(chaveUsuario(chave))}catch(e){return null}
+}
+function removerLocal(chave){
+  try{localStorage.removeItem(chaveUsuario(chave))}catch(e){}
+}
+
+function montarEstadoNuvem(){
+  return {
+    produtos,
+    movimentacoes,
+    mesas,
+    vendasCaixa,
+    pedidosDelivery,
+    despesasFinanceiras,
+    configFiscal,
+    configCardapio,
+    documentosFiscais,
+    atualizadoEm:Date.now()
+  };
+}
+
+function agendarSincronizacaoNuvem(){
+  if(!usuarioAtual||!banco)return;
+  clearTimeout(sincronizacaoTimer);
+  sincronizacaoTimer=setTimeout(()=>{
+    banco.ref("usuarios/"+usuarioAtual.uid+"/dados").set(montarEstadoNuvem()).catch(e=>{
+      console.error(e);
+      mostrarMensagem("⚠️ Não foi possível sincronizar na nuvem. Os dados continuam salvos neste dispositivo.","erro");
+    });
+  },500);
+}
+
+async function carregarDadosNuvem(){
+  if(!usuarioAtual||!banco)return false;
+
+  const caminho="usuarios/"+usuarioAtual.uid+"/dados";
+  const comTimeout=(promessa,ms=8000)=>Promise.race([
+    promessa,
+    new Promise((_,reject)=>setTimeout(()=>reject(new Error("Tempo limite ao conectar ao Realtime Database.")),ms))
+  ]);
+
+  try{
+    const snap=await comTimeout(banco.ref(caminho).once("value"),8000);
+    const dados=snap.val();
+
+    if(dados&&typeof dados==="object"){
+      produtos=Array.isArray(dados.produtos)?dados.produtos:[];
+      movimentacoes=Array.isArray(dados.movimentacoes)?dados.movimentacoes:[];
+      mesas=Array.isArray(dados.mesas)?dados.mesas:[];
+      vendasCaixa=Array.isArray(dados.vendasCaixa)?dados.vendasCaixa:[];
+      pedidosDelivery=Array.isArray(dados.pedidosDelivery)?dados.pedidosDelivery:[];
+      despesasFinanceiras=Array.isArray(dados.despesasFinanceiras)?dados.despesasFinanceiras:[];
+      configFiscal=dados.configFiscal&&typeof dados.configFiscal==="object"?dados.configFiscal:{};
+      configCardapio=Object.assign({nome:"GastroFlow",mensagem:"Escolha seu pedido"},dados.configCardapio||{});
+      documentosFiscais=Array.isArray(dados.documentosFiscais)?dados.documentosFiscais:[];
+      salvarTodosLocais();
+      return true;
+    }
+
+    // Conta nova: começa limpa e cria seu espaço próprio na nuvem.
+    produtos=[];movimentacoes=[];mesas=[];vendasCaixa=[];pedidosDelivery=[];despesasFinanceiras=[];configFiscal={};configCardapio={nome:"GastroFlow",mensagem:"Escolha seu pedido"};documentosFiscais=[];
+    garantirMesas();
+    salvarTodosLocais();
+
+    await comTimeout(
+      banco.ref(caminho).set(montarEstadoNuvem()),
+      8000
+    );
+
+    return true;
+  }catch(e){
+    console.error("GastroFlow nuvem:",e);
+    // A autenticação já foi concluída. Não deixe o usuário preso no botão.
+    // O app continua usando os dados locais e tentará sincronizar novamente depois.
+    mostrarMensagem("⚠️ Login realizado. A nuvem demorou para responder; o GastroFlow foi aberto com os dados deste dispositivo.","erro");
+    return false;
+  }
+}
+
+function salvarTodosLocais(){
+  salvarProdutos();salvarMovimentacoes();salvarMesas();salvarCaixa();salvarDelivery();salvarRecursosNovos();
+}
+
+function mostrarErroLogin(msg){
+  const el=document.getElementById("loginErro");
+  if(el){el.textContent=msg;el.style.display="block";}
+}
+function limparErroLogin(){const el=document.getElementById("loginErro");if(el){el.textContent="";el.style.display="none"}}
+function setLoginCarregando(v){
+  const b=document.getElementById("btnEntrar");
+  if(b){b.disabled=v;b.textContent=v?"⏳ Aguarde...":"🔐 Entrar";}
+}
+function mostrarApp(usuario){
+  usuarioAtual=usuario;
+  document.body.classList.remove("gastro-bloqueado");
+  const tela=document.getElementById("telaLogin");
+  if(tela){tela.style.display="none";tela.style.visibility="hidden";}
+  document.getElementById("barraUsuario").style.display="flex";
+  document.getElementById("usuarioLogado").textContent="👤 "+(usuario.email||"Conta GastroFlow");
+  atualizarBadgePerfil();
+  atualizarAcessoAdmin();
+}
+function mostrarLogin(){
+  usuarioAtual=null;
+  perfilUsuario={role:"usuario"};
+  document.body.classList.add("gastro-bloqueado");
+  const tela=document.getElementById("telaLogin");
+  if(tela){tela.style.display="flex";tela.style.visibility="visible";}
+  document.getElementById("barraUsuario").style.display="none";
+  document.querySelectorAll(".admin-only").forEach(el=>el.classList.remove("admin-visivel"));
+}
+function traduzirErroFirebase(erro){
+  const c=erro&&erro.code||"";
+  const mapa={
+    "auth/invalid-email":"E-mail inválido.",
+    "auth/user-not-found":"Conta não encontrada.",
+    "auth/wrong-password":"E-mail ou senha incorretos.",
+    "auth/invalid-credential":"E-mail ou senha incorretos.",
+    "auth/email-already-in-use":"Este e-mail já possui uma conta.",
+    "auth/weak-password":"A senha precisa ter pelo menos 6 caracteres.",
+    "auth/network-request-failed":"Falha de conexão. Verifique a internet.",
+    "auth/too-many-requests":"Muitas tentativas. Aguarde alguns minutos."
+  };
+  return mapa[c]||erro?.message||"Não foi possível concluir a operação.";
+}
+
+async function entrarGastroFlow(e){
+  e.preventDefault();limparErroLogin();
+  if(!firebasePronto&&!iniciarFirebase())return;
+  const email=document.getElementById("loginEmail").value.trim();
+  const senha=document.getElementById("loginSenha").value;
+  setLoginCarregando(true);
+  try{await auth.signInWithEmailAndPassword(email,senha)}catch(err){mostrarErroLogin(traduzirErroFirebase(err));setLoginCarregando(false)}
+}
+
+async function criarContaGastroFlow(){
+  limparErroLogin();
+  if(!firebasePronto&&!iniciarFirebase())return;
+  const email=document.getElementById("loginEmail").value.trim();
+  const senha=document.getElementById("loginSenha").value;
+  if(!email||senha.length<6){mostrarErroLogin("Informe um e-mail válido e uma senha com pelo menos 6 caracteres.");return}
+  setLoginCarregando(true);
+  try{await auth.createUserWithEmailAndPassword(email,senha)}catch(err){mostrarErroLogin(traduzirErroFirebase(err));setLoginCarregando(false)}
+}
+
+async function recuperarSenhaGastroFlow(){
+  limparErroLogin();
+  if(!firebasePronto&&!iniciarFirebase())return;
+  const email=document.getElementById("loginEmail").value.trim();
+  if(!email){mostrarErroLogin("Digite seu e-mail primeiro para receber o link de recuperação.");return}
+  try{await auth.sendPasswordResetEmail(email);mostrarErroLogin("Link de recuperação enviado para seu e-mail. Confira também a caixa de spam.");document.getElementById("loginErro").style.background="#eff6ff";document.getElementById("loginErro").style.color="#1e40af";document.getElementById("loginErro").style.borderColor="#bfdbfe";}catch(err){mostrarErroLogin(traduzirErroFirebase(err))}
+}
+
+async function entrarNoAppDepoisDoLogin(usuario){
+  limparErroLogin();
+  usuarioAtual=usuario;
+  await carregarPerfilUsuario(usuario);
+  mostrarApp(usuario);
+
+  try{
+    const nuvemOk=await carregarDadosNuvem();
+    garantirMesas();
+    atualizarTudo();
+    atualizarPreviewFoto();
+    abrirModulo("painel");
+    if(nuvemOk){
+      mostrarMensagem("✅ GastroFlow conectado com sua conta e com a nuvem.","sucesso");
+    }
+  }catch(e){
+    console.error("GastroFlow pós-login:",e);
+    garantirMesas();
+    atualizarTudo();
+    atualizarPreviewFoto();
+    abrirModulo("painel");
+    mostrarMensagem("⚠️ Conta conectada. O sistema abriu, mas a sincronização com a nuvem precisa ser verificada.","erro");
+  }finally{
+    setLoginCarregando(false);
+  }
+}
+
+function iniciarAutenticacao(){
+  if(!iniciarFirebase())return;
+  document.getElementById("formLogin")?.addEventListener("submit",entrarGastroFlow);
+  document.getElementById("btnCriarConta")?.addEventListener("click",criarContaGastroFlow);
+  document.getElementById("btnEsqueciSenha")?.addEventListener("click",recuperarSenhaGastroFlow);
+  document.getElementById("btnSair")?.addEventListener("click",async()=>{try{await auth.signOut()}catch(e){mostrarMensagem("Não foi possível sair.","erro")}});
+  auth.onAuthStateChanged(async usuario=>{
+    if(usuario){await entrarNoAppDepoisDoLogin(usuario)}else{mostrarLogin();setLoginCarregando(false)}
+  });
+}
+
+
+document.addEventListener("click",function(e){
+const card=e.target.closest("[data-recurso-modulo]");
+if(!card)return;
+const modulo=card.getAttribute("data-recurso-modulo");
+if(typeof abrirModulo==="function"){
+abrirModulo(modulo);
+}else{
+const alvo=document.getElementById("modulo-"+modulo);
+if(alvo){
+document.querySelectorAll(".modulo").forEach(x=>x.classList.remove("ativo"));
+alvo.classList.add("ativo");
+window.scrollTo({top:0,behavior:"smooth"});
+}
+}
+});
+
+
+
+const CHAVE_PRODUTOS="gastroflow_produtos",
+CHAVE_MOVIMENTACOES="gastroflow_movimentacoes",
+CHAVE_MESAS="gastroflow_mesas",
+CHAVE_CAIXA="gastroflow_caixa",
+CHAVE_DELIVERY="gastroflow_delivery";
+
+let produtos=[],
+movimentacoes=[],
+mesas=[],
+vendasCaixa=[],
+pedidosDelivery=[];
+
+let produtoEditandoId=null,
+produtoExclusaoId=null,
+mesaSelecionadaId=null,
+mesaComandaId=null,
+mesaPagamentoId=null,
+deliveryPagamentoId=null,
+fotoProdutoAtual="",
+carrinhoDelivery={};
+
+/* =========================
+   INSTALAÇÃO / APP
+========================= */
+
+let eventoInstalacao=null;
+
+function prepararManifesto(){
+
+try{
+
+const manifest={
+name:"GastroFlow",
+short_name:"GastroFlow",
+description:"Gestão completa para bar, restaurante, mesas, pedidos, estoque, caixa e delivery.",
+start_url:window.location.href,
+display:"standalone",
+background_color:"#f5f7fb",
+theme_color:"#0f172a",
+orientation:"portrait-primary",
+lang:"pt-BR",
+icons:[
+{
+src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230f172a'/%3E%3Ctext x='256' y='330' text-anchor='middle' font-size='260'%3E🍽️%3C/text%3E%3C/svg%3E",
+sizes:"512x512",
+type:"image/svg+xml",
+purpose:"any maskable"
+}
+]
+};
+
+const blob=new Blob(
+[JSON.stringify(manifest)],
+{type:"application/manifest+json"}
+);
+
+const url=URL.createObjectURL(blob);
+
+const link=document.createElement("link");
+
+link.rel="manifest";
+link.href=url;
+
+document.head.appendChild(link);
+
+}catch(e){
+
+console.warn(
+"Manifesto não pôde ser preparado.",
+e
+)
+
+}
+
+}
+
+function mostrarBotaoInstalar(){
+
+const area=document.getElementById(
+"instalarApp"
+);
+
+if(!area)return;
+
+if(
+eventoInstalacao &&
+!window.matchMedia(
+"(display-mode: standalone)"
+).matches
+){
+
+area.classList.add("ativo")
+
+}
+
+}
+
+function esconderBotaoInstalar(){
+
+const area=document.getElementById(
+"instalarApp"
+);
+
+if(area)
+area.classList.remove("ativo")
+
+}
+
+window.addEventListener(
+"beforeinstallprompt",
+function(e){
+
+e.preventDefault();
+
+eventoInstalacao=e;
+
+mostrarBotaoInstalar()
+
+}
+);
+
+window.addEventListener(
+"appinstalled",
+function(){
+
+eventoInstalacao=null;
+
+esconderBotaoInstalar();
+
+mostrarMensagem(
+"📲 GastroFlow instalado com sucesso!",
+"sucesso"
+)
+
+}
+);
+
+async function instalarGastroFlow(){
+
+if(!eventoInstalacao){
+
+mostrarMensagem(
+"No iPhone, use Compartilhar → Adicionar à Tela de Início. No Android, a opção de instalação aparecerá quando o navegador permitir.",
+"sucesso"
+);
+
+return
+}
+
+try{
+
+eventoInstalacao.prompt();
+
+const resultado=
+await eventoInstalacao.userChoice;
+
+if(
+resultado &&
+resultado.outcome==="accepted"
+){
+
+mostrarMensagem(
+"📲 Instalando o GastroFlow...",
+"sucesso"
+)
+
+}
+
+eventoInstalacao=null;
+
+esconderBotaoInstalar();
+
+}catch(e){
+
+console.error(e);
+
+mostrarMensagem(
+"Não foi possível iniciar a instalação.",
+"erro"
+)
+
+}
+
+}
+
+function escaparHTML(t){
+return String(t??"")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;")
+}
+
+function formatarMoeda(v){
+return Number(v||0).toLocaleString("pt-BR",{
+style:"currency",
+currency:"BRL"
+})
+}
+
+function mostrarMensagem(t,tipo){
+const e=document.getElementById("mensagem");
+e.textContent=t;
+e.className="mensagem "+tipo;
+e.style.display="block";
+clearTimeout(window.timerMensagem);
+window.timerMensagem=setTimeout(()=>{
+e.style.display="none"
+},3500)
+}
+
+function obterDataLocalISO(d){
+const x=new Date(d);
+if(isNaN(x.getTime()))return"";
+return x.getFullYear()+"-"+
+String(x.getMonth()+1).padStart(2,"0")+"-"+
+String(x.getDate()).padStart(2,"0")
+}
+
+function dataHojeISO(){
+return obterDataLocalISO(new Date())
+}
+
+function salvarProdutos(){
+salvarLocal(CHAVE_PRODUTOS,JSON.stringify(produtos))
+}
+
+function carregarProdutos(){
+try{
+produtos=JSON.parse(lerLocal(CHAVE_PRODUTOS))||[]
+}catch(e){
+produtos=[]
+}
+}
+
+function salvarMovimentacoes(){
+salvarLocal(CHAVE_MOVIMENTACOES,JSON.stringify(movimentacoes))
+}
+
+function carregarMovimentacoes(){
+try{
+movimentacoes=JSON.parse(lerLocal(CHAVE_MOVIMENTACOES))||[]
+}catch(e){
+movimentacoes=[]
+}
+}
+
+function salvarMesas(){
+salvarLocal(CHAVE_MESAS,JSON.stringify(mesas))
+}
+
+function carregarMesas(){
+try{
+mesas=JSON.parse(lerLocal(CHAVE_MESAS))||[]
+}catch(e){
+mesas=[]
+}
+}
+
+function salvarCaixa(){
+salvarLocal(CHAVE_CAIXA,JSON.stringify(vendasCaixa))
+}
+
+function carregarCaixa(){
+try{
+vendasCaixa=JSON.parse(lerLocal(CHAVE_CAIXA))||[]
+}catch(e){
+vendasCaixa=[]
+}
+}
+
+function salvarDelivery(){
+salvarLocal(CHAVE_DELIVERY,JSON.stringify(pedidosDelivery))
+}
+
+function carregarDelivery(){
+try{
+pedidosDelivery=JSON.parse(lerLocal(CHAVE_DELIVERY))||[]
+}catch(e){
+pedidosDelivery=[]
+}
+}
+
+function garantirMesas(){
+
+let mudou=false;
+
+const existentes=new Set(
+mesas.map(m=>Number(m.numero))
+);
+
+for(let n=1;n<=500;n++){
+
+if(!existentes.has(n)){
+
+mesas.push({
+id:"mesa-"+n,
+numero:n,
+status:"livre",
+cliente:"",
+comanda:"",
+dataAbertura:null,
+itens:[]
+});
+
+mudou=true
+
+}
+
+}
+
+mesas.forEach(m=>{
+
+if(!Array.isArray(m.itens)){
+m.itens=[];
+mudou=true
+}
+
+m.itens.forEach(i=>{
+
+if(!i.pedidoStatus){
+i.pedidoStatus="pendente";
+mudou=true
+}
+
+})
+
+});
+
+mesas.sort((a,b)=>Number(a.numero)-Number(b.numero));
+
+if(mudou)salvarMesas()
+
+}
+
+function atualizarPreviewFoto(){
+
+const p=document.getElementById("previewFoto");
+
+if(!p)return;
+
+p.innerHTML=fotoProdutoAtual?
+`<img src="${fotoProdutoAtual}" alt="Foto do produto">`:
+`<div class="preview-foto-vazia">📷<br>Sem foto</div>`
+
+}
+
+function carregarFotoProduto(e){
+
+const a=e.target.files[0];
+
+if(!a)return;
+
+if(!a.type.startsWith("image/")){
+
+mostrarMensagem(
+"Selecione uma imagem válida.",
+"erro"
+);
+
+e.target.value="";
+return
+}
+
+const r=new FileReader();
+
+r.onload=x=>{
+fotoProdutoAtual=x.target.result;
+atualizarPreviewFoto()
+};
+
+r.readAsDataURL(a)
+
+}
+
+function removerFotoProduto(){
+
+fotoProdutoAtual="";
+
+const i=document.getElementById("produtoFoto");
+
+if(i)i.value="";
+
+atualizarPreviewFoto()
+
+}
+
+function salvarProduto(e){
+
+e.preventDefault();
+
+const nome=document.getElementById("produtoNome").value.trim(),
+categoria=document.getElementById("produtoCategoria").value.trim(),
+preco=Number(document.getElementById("produtoPreco").value),
+custo=Number(document.getElementById("produtoCusto").value||0),
+estoque=Number(document.getElementById("produtoEstoque").value||0),
+min=Number(document.getElementById("produtoEstoqueMinimo").value||0);
+
+if(!nome){
+mostrarMensagem("Informe o nome do produto.","erro");
+return
+}
+
+if(preco<0){
+mostrarMensagem("O preço não pode ser negativo.","erro");
+return
+}
+
+if(produtoEditandoId){
+
+const p=produtos.find(
+x=>String(x.id)===String(produtoEditandoId)
+);
+
+if(p){
+
+p.nome=nome;
+p.categoria=categoria;
+p.preco=preco;
+p.custo=custo;
+p.estoque=estoque;
+p.estoqueMinimo=min;
+p.foto=fotoProdutoAtual||""
+
+}
+
+mostrarMensagem(
+"Produto atualizado com sucesso!",
+"sucesso"
+)
+
+}else{
+
+produtos.push({
+
+id:Date.now().toString()+
+Math.random().toString(36).substring(2),
+
+nome,
+categoria,
+preco,
+custo,
+estoque,
+estoqueMinimo:min,
+ativo:true,
+foto:fotoProdutoAtual||""
+
+});
+
+mostrarMensagem(
+"Produto cadastrado com sucesso!",
+"sucesso"
+)
+
+}
+
+salvarProdutos();
+cancelarEdicao();
+atualizarTudo()
+
+}
+
+function renderizarProdutos(){
+
+const lista=document.getElementById("listaProdutos");
+
+const busca=document.getElementById("buscaProduto")
+.value.trim().toLowerCase();
+
+const filtrados=produtos.filter(p=>
+String(p.nome||"").toLowerCase().includes(busca)||
+String(p.categoria||"").toLowerCase().includes(busca)
+);
+
+if(!filtrados.length){
+
+lista.innerHTML=
+`<div class="card">Nenhum produto encontrado.</div>`;
+
+return
+
+}
+
+lista.innerHTML=filtrados.map(p=>{
+
+const e=Number(p.estoque||0),
+m=Number(p.estoqueMinimo||0);
+
+const foto=p.foto?
+`<img src="${p.foto}" alt="${escaparHTML(p.nome)}">`:
+`<div class="produto-foto-vazia">🍽️</div>`;
+
+return `
+<div class="item-card produto-card-com-foto">
+
+<div class="produto-foto-card">
+${foto}
+</div>
+
+<div>
+
+<h3>${escaparHTML(p.nome)}</h3>
+
+<p>
+Categoria:
+<strong>${escaparHTML(p.categoria||"Sem categoria")}</strong>
+</p>
+
+<p>
+Preço:
+<strong>${formatarMoeda(p.preco)}</strong>
+</p>
+
+<p>
+Custo:
+<strong>${formatarMoeda(p.custo)}</strong>
+</p>
+
+<p>
+Estoque:
+<strong>${e}</strong>
+</p>
+
+${e<=m?
+`<div class="alerta alerta-baixo">⚠️ Estoque baixo</div>`:
+`<div class="alerta alerta-ok">✅ Estoque adequado</div>`
+}
+
+<div class="acoes">
+
+<button
+class="btn btn-primary"
+type="button"
+data-acao="editar-produto"
+data-id="${p.id}">
+✏️ Editar
+</button>
+
+<button
+class="btn btn-danger"
+type="button"
+data-acao="excluir-produto"
+data-id="${p.id}">
+🗑️ Excluir
+</button>
+
+</div>
+
+</div>
+
+</div>
+`
+
+}).join("")
+
+}
+
+function atualizarResumo(){
+
+document.getElementById("totalProdutos").textContent=produtos.length;
+
+document.getElementById("produtosAtivos").textContent=
+produtos.filter(p=>p.ativo!==false).length;
+
+document.getElementById("produtosEstoqueBaixo").textContent=
+produtos.filter(
+p=>Number(p.estoque||0)<=Number(p.estoqueMinimo||0)
+).length;
+
+document.getElementById("totalUnidades").textContent=
+produtos.reduce(
+(t,p)=>t+Number(p.estoque||0),
+0
+)
+
+}
+
+function editarProduto(id){
+
+const p=produtos.find(
+x=>String(x.id)===String(id)
+);
+
+if(!p)return;
+
+produtoEditandoId=p.id;
+
+document.getElementById("produtoNome").value=p.nome;
+document.getElementById("produtoCategoria").value=p.categoria||"";
+document.getElementById("produtoPreco").value=p.preco;
+document.getElementById("produtoCusto").value=p.custo||0;
+document.getElementById("produtoEstoque").value=p.estoque||0;
+document.getElementById("produtoEstoqueMinimo").value=p.estoqueMinimo||0;
+
+fotoProdutoAtual=p.foto||"";
+
+atualizarPreviewFoto();
+
+document.getElementById("btnSalvar").textContent=
+"💾 Atualizar Produto";
+
+abrirModulo("produtos");
+
+scrollTo({
+top:0,
+behavior:"smooth"
+})
+
+}
+
+function cancelarEdicao(){
+
+produtoEditandoId=null;
+
+document.getElementById("formProduto").reset();
+
+fotoProdutoAtual="";
+
+atualizarPreviewFoto();
+
+document.getElementById("btnSalvar").textContent=
+"💾 Salvar Produto"
+
+}
+
+function abrirModalExclusao(id){
+
+produtoExclusaoId=id;
+
+document.getElementById("modalExclusao")
+.classList.add("ativo")
+
+}
+
+function fecharModalExclusao(){
+
+produtoExclusaoId=null;
+
+document.getElementById("modalExclusao")
+.classList.remove("ativo")
+
+}
+
+function confirmarExclusao(){
+
+if(!produtoExclusaoId)return;
+
+produtos=produtos.filter(
+p=>String(p.id)!==String(produtoExclusaoId)
+);
+
+salvarProdutos();
+
+fecharModalExclusao();
+
+atualizarTudo();
+
+mostrarMensagem(
+"Produto excluído com sucesso!",
+"sucesso"
+)
+
+}
+
+function atualizarSelectEstoque(){
+
+document.getElementById("estoqueProduto").innerHTML=
+`<option value="">Selecione um produto</option>`+
+produtos.map(p=>
+`<option value="${p.id}">
+${escaparHTML(p.nome)}
+</option>`
+).join("")
+
+}
+
+function atualizarSelectComanda(){
+
+document.getElementById("comandaProduto").innerHTML=
+`<option value="">Selecione um produto</option>`+
+produtos
+.filter(p=>p.ativo!==false)
+.map(p=>
+`<option value="${p.id}">
+${escaparHTML(p.nome)} - ${formatarMoeda(p.preco)}
+</option>`
+).join("")
+
+}
+
+function mostrarEstoqueSelecionado(){
+
+const id=document.getElementById("estoqueProduto").value;
+
+const p=produtos.find(
+x=>String(x.id)===String(id)
+);
+
+if(!p){
+
+document.getElementById("estoqueAtualSelecionado")
+.textContent="0";
+
+document.getElementById("quantidadeEstoqueSelecionado")
+.textContent="0";
+
+document.getElementById("alertaEstoqueSelecionado")
+.innerHTML="";
+
+return
+
+}
+
+const e=Number(p.estoque||0),
+m=Number(p.estoqueMinimo||0);
+
+document.getElementById("estoqueAtualSelecionado")
+.textContent=e;
+
+document.getElementById("quantidadeEstoqueSelecionado")
+.textContent=e;
+
+document.getElementById("alertaEstoqueSelecionado")
+.innerHTML=e<=m?
+`<div class="alerta alerta-baixo">
+⚠️ Estoque baixo. Mínimo: ${m}
+</div>`:
+`<div class="alerta alerta-ok">
+✅ Estoque adequado. Mínimo: ${m}
+</div>`
+
+}
+
+function registrarMovimentacao(e){
+
+e.preventDefault();
+
+const id=document.getElementById("estoqueProduto").value,
+tipo=document.getElementById("tipoMovimentacao").value,
+q=Number(document.getElementById("quantidadeMovimentacao").value),
+motivo=document.getElementById("motivoMovimentacao").value.trim(),
+p=produtos.find(
+x=>String(x.id)===String(id)
+);
+
+if(!p){
+mostrarMensagem("Selecione um produto.","erro");
+return
+}
+
+if(q<=0){
+mostrarMensagem("Informe uma quantidade válida.","erro");
+return
+}
+
+const anterior=Number(p.estoque||0);
+
+let novo=anterior;
+
+if(tipo==="entrada")novo+=q;
+
+if(tipo==="saida"){
+
+if(q>anterior){
+mostrarMensagem("Estoque insuficiente.","erro");
+return
+}
+
+novo-=q
+
+}
+
+if(tipo==="ajuste")novo=q;
+
+p.estoque=novo;
+
+movimentacoes.unshift({
+
+id:Date.now().toString()+
+Math.random().toString(36).substring(2),
+
+produtoId:p.id,
+produtoNome:p.nome,
+tipo,
+quantidade:q,
+estoqueAnterior:anterior,
+estoqueNovo:novo,
+motivo,
+data:new Date().toISOString()
+
+});
+
+salvarProdutos();
+salvarMovimentacoes();
+
+document.getElementById("formMovimentacao").reset();
+
+atualizarTudo();
+mostrarEstoqueSelecionado();
+
+mostrarMensagem(
+"Movimentação registrada com sucesso!",
+"sucesso"
+)
+
+}
+
+function renderizarEstoque(){
+
+const lista=document.getElementById("listaEstoque");
+
+const busca=document.getElementById("buscaEstoque")
+.value.trim().toLowerCase();
+
+const f=produtos.filter(p=>
+String(p.nome||"").toLowerCase().includes(busca)
+);
+
+if(!f.length){
+
+lista.innerHTML=
+`<div class="card">Nenhum produto encontrado.</div>`;
+
+return
+}
+
+lista.innerHTML=f.map(p=>{
+
+const e=Number(p.estoque||0),
+m=Number(p.estoqueMinimo||0);
+
+return `
+<div class="item-card">
+
+<h3>${escaparHTML(p.nome)}</h3>
+
+<p>
+Estoque atual:
+<strong>${e}</strong>
+</p>
+
+<p>
+Estoque mínimo:
+<strong>${m}</strong>
+</p>
+
+${
+e<=m?
+`<div class="alerta alerta-baixo">⚠️ Estoque baixo</div>`:
+`<div class="alerta alerta-ok">✅ Estoque normal</div>`
+}
+
+</div>
+`
+
+}).join("")
+
+}
+
+function renderizarHistorico(){
+
+const e=document.getElementById("historicoEstoque");
+
+if(!movimentacoes.length){
+
+e.innerHTML="<p>Nenhuma movimentação registrada.</p>";
+
+return
+}
+
+e.innerHTML=`
+<div class="tabela-container">
+
+<table class="tabela">
+
+<thead>
+
+<tr>
+<th>Data</th>
+<th>Produto</th>
+<th>Tipo</th>
+<th>Quantidade</th>
+<th>Estoque</th>
+<th>Motivo</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+${movimentacoes.map(m=>`
+
+<tr>
+
+<td>
+${new Date(m.data).toLocaleString("pt-BR")}
+</td>
+
+<td>
+${escaparHTML(m.produtoNome)}
+</td>
+
+<td>
+${escaparHTML(m.tipo)}
+</td>
+
+<td>${m.quantidade}</td>
+
+<td>${m.estoqueNovo}</td>
+
+<td>${escaparHTML(m.motivo||"-")}</td>
+
+</tr>
+
+`).join("")}
+
+</tbody>
+
+</table>
+
+</div>
+`
+
+}
+
+function abrirModulo(nome){
+
+document.querySelectorAll(".modulo")
+.forEach(m=>m.classList.remove("ativo"));
+
+const mod=document.getElementById("modulo-"+nome);
+
+if(mod)mod.classList.add("ativo");
+
+if(nome==="painel")renderizarPainel();
+
+if(nome==="mesas"){
+garantirMesas();
+renderizarMesas()
+}
+
+if(nome==="pedidos")renderizarPedidos();
+
+if(nome==="preparo")renderizarPreparo();
+
+if(nome==="pronto")renderizarPronto();
+
+if(nome==="entregue")renderizarEntregue();
+
+if(nome==="delivery"){
+renderizarDeliveryProdutos();
+renderizarDelivery()
+}
+
+if(nome==="caixa"){
+carregarCaixa();
+renderizarCaixa()
+}
+
+if(nome==="relatorios"){
+carregarCaixa();
+renderizarRelatorios()
+}
+
+if(nome==="backup"){
+atualizarResumoBackup()
+}
+
+}
+
+function abrirModalMesa(id){
+
+mesaSelecionadaId=id;
+
+const m=mesas.find(
+x=>String(x.id)===String(id)
+);
+
+if(!m)return;
+
+document.getElementById("mesaId").value=m.id;
+document.getElementById("mesaCliente").value=m.cliente||"";
+document.getElementById("mesaComanda").value=m.comanda||"";
+
+document.getElementById("modalMesa")
+.classList.add("ativo")
+
+}
+
+function fecharModalMesa(){
+
+mesaSelecionadaId=null;
+
+document.getElementById("formMesa").reset();
+
+document.getElementById("modalMesa")
+.classList.remove("ativo")
+
+}
+
+function abrirMesa(e){
+
+e.preventDefault();
+
+const id=document.getElementById("mesaId").value,
+cliente=document.getElementById("mesaCliente").value.trim(),
+comanda=document.getElementById("mesaComanda").value.trim(),
+m=mesas.find(
+x=>String(x.id)===String(id)
+);
+
+if(!m){
+mostrarMensagem("Mesa não encontrada.","erro");
+return
+}
+
+m.status="aberta";
+m.cliente=cliente;
+m.comanda=comanda;
+m.dataAbertura=new Date().toISOString();
+m.itens=Array.isArray(m.itens)?m.itens:[];
+
+salvarMesas();
+
+fecharModalMesa();
+
+renderizarMesas();
+renderizarPedidos();
+renderizarCaixa();
+renderizarPainel();
+
+abrirComanda(m.id);
+
+mostrarMensagem(
+"Mesa aberta com sucesso!",
+"sucesso"
+)
+
+}
+
+function calcularTotalMesa(m){
+
+return !m||!Array.isArray(m.itens)?
+0:
+m.itens.reduce(
+(t,i)=>t+Number(i.preco||0)*Number(i.quantidade||0),
+0
+)
+
+}
+
+function renderizarMesas(){
+
+document.getElementById("listaMesas").innerHTML=
+mesas.map(m=>{
+
+const total=calcularTotalMesa(m);
+
+const q=(m.itens||[]).reduce(
+(t,i)=>t+Number(i.quantidade||0),
+0
+);
+
+if(m.status==="aberta"){
+
+return `
+<div class="mesa-card aberta">
+
+<h3>🪑 Mesa ${m.numero}</h3>
+
+<span class="badge badge-aberta">
+ABERTA
+</span>
+
+<p>
+Cliente:
+<strong>${escaparHTML(m.cliente)}</strong>
+</p>
+
+<p>
+Comanda:
+<strong>${escaparHTML(m.comanda)}</strong>
+</p>
+
+<p>
+Itens:
+<strong>${q}</strong>
+</p>
+
+<p>
+Total:
+<strong>${formatarMoeda(total)}</strong>
+</p>
+
+<div class="acoes">
+
+<button
+class="btn btn-primary"
+type="button"
+data-acao="abrir-comanda"
+data-id="${m.id}">
+🧾 Comanda
+</button>
+
+${
+m.itens.length?
+`<button
+class="btn btn-success"
+type="button"
+data-acao="ir-caixa"
+data-id="${m.id}">
+💰 Ir para Caixa
+</button>`:
+`<button
+class="btn btn-danger"
+type="button"
+data-acao="fechar-mesa"
+data-id="${m.id}">
+🔴 Fechar Mesa
+</button>`
+}
+
+</div>
+
+</div>
+`
+
+}
+
+return `
+<div class="mesa-card">
+
+<h3>🪑 Mesa ${m.numero}</h3>
+
+<span class="badge badge-livre">
+LIVRE
+</span>
+
+<div class="acoes">
+
+<button
+class="btn btn-success"
+type="button"
+data-acao="abrir-mesa"
+data-id="${m.id}">
+🪑 Abrir Mesa
+</button>
+
+</div>
+
+</div>
+`
+
+}).join("")
+
+}
+
+function abrirComanda(id){
+
+const m=mesas.find(
+x=>String(x.id)===String(id)
+);
+
+if(!m)return;
+
+mesaComandaId=m.id;
+
+document.getElementById("tituloComanda")
+.textContent=
+"🧾 Mesa "+m.numero+
+" - Comanda "+m.comanda;
+
+atualizarSelectComanda();
+renderizarComanda();
+
+document.getElementById("modalComanda")
+.classList.add("ativo")
+
+}
+
+function fecharModalComanda(){
+
+mesaComandaId=null;
+
+document.getElementById("modalComanda")
+.classList.remove("ativo")
+
+}
+
+function renderizarComanda(){
+
+const m=mesas.find(
+x=>String(x.id)===String(mesaComandaId)
+);
+
+const l=document.getElementById("listaComanda");
+
+if(!m){
+l.innerHTML="";
+return
+}
+
+document.getElementById("dadosComanda").innerHTML=`
+
+<p>
+Cliente:
+<strong>${escaparHTML(m.cliente)}</strong>
+</p>
+
+<p>
+Comanda:
+<strong>${escaparHTML(m.comanda)}</strong>
+</p>
+
+<p>
+Total:
+<strong>${formatarMoeda(calcularTotalMesa(m))}</strong>
+</p>
+
+`;
+
+if(!m.itens.length){
+
+l.innerHTML=
+`<div class="alerta alerta-ok">
+Nenhum produto adicionado ainda.
+</div>`;
+
+return
+}
+
+l.innerHTML=m.itens.map(i=>`
+
+<div class="item-linha">
+
+<div class="item-linha-top">
+
+<strong>
+${i.quantidade}x ${escaparHTML(i.nome)}
+</strong>
+
+<strong>
+${formatarMoeda(i.subtotal)}
+</strong>
+
+</div>
+
+<p>${formatarMoeda(i.preco)} cada</p>
+
+<span class="badge ${
+i.pedidoStatus==="pendente"?
+"badge-pendente":
+i.pedidoStatus==="preparo"?
+"badge-preparo":
+i.pedidoStatus==="pronto"?
+"badge-pronto":
+"badge-entregue"
+}">
+
+${
+i.pedidoStatus==="pendente"?
+"PENDENTE":
+i.pedidoStatus==="preparo"?
+"EM PREPARO":
+i.pedidoStatus==="pronto"?
+"PRONTO":
+"ENTREGUE"
+}
+
+</span>
+
+${
+i.pedidoStatus==="pendente"?
+`<button
+type="button"
+class="btn btn-danger"
+style="margin-top:10px"
+data-acao="remover-item-comanda"
+data-item-id="${i.id}">
+🗑️ Remover
+</button>`:""
+}
+
+</div>
+
+`).join("")
+
+}
+
+function adicionarProdutoComanda(){
+
+const m=mesas.find(
+x=>String(x.id)===String(mesaComandaId)
+);
+
+const id=document.getElementById("comandaProduto").value;
+
+const q=Number(
+document.getElementById("comandaQuantidade").value
+);
+
+const p=produtos.find(
+x=>String(x.id)===String(id)
+);
+
+if(!m)return;
+
+if(!p){
+mostrarMensagem("Selecione um produto.","erro");
+return
+}
+
+if(q<=0){
+mostrarMensagem("Informe uma quantidade válida.","erro");
+return
+}
+
+const ex=m.itens.find(
+i=>String(i.id)===String(p.id)&&
+i.pedidoStatus==="pendente"
+);
+
+if(ex){
+
+ex.quantidade+=q;
+ex.subtotal=ex.quantidade*ex.preco
+
+}else{
+
+m.itens.push({
+id:p.id,
+nome:p.nome,
+preco:Number(p.preco),
+quantidade:q,
+subtotal:Number(p.preco)*q,
+pedidoStatus:"pendente"
+})
+
+}
+
+salvarMesas();
+
+document.getElementById("comandaQuantidade").value=1;
+
+renderizarComanda();
+renderizarMesas();
+renderizarPedidos();
+renderizarCaixa();
+renderizarPainel();
+
+mostrarMensagem(
+"Produto adicionado à comanda!",
+"sucesso"
+)
+
+}
+
+function removerItemComanda(id){
+
+const m=mesas.find(
+x=>String(x.id)===String(mesaComandaId)
+);
+
+if(!m)return;
+
+m.itens=m.itens.filter(
+i=>String(i.id)!==String(id)
+);
+
+salvarMesas();
+
+renderizarComanda();
+renderizarMesas();
+renderizarPedidos();
+renderizarCaixa();
+renderizarPainel()
+
+}
+
+/* =========================
+   FLUXO DOS PEDIDOS
+========================= */
+
+function atualizarResumoPedidos(){
+
+let p=0,
+prep=0,
+total=0,
+pronto=0,
+entregue=0;
+
+mesas.forEach(m=>{
+
+if(m.status!=="aberta")return;
+
+m.itens.forEach(i=>{
+
+const q=Number(i.quantidade||0);
+
+total+=q;
+
+if(i.pedidoStatus==="pendente")p+=q;
+
+if(i.pedidoStatus==="preparo")prep+=q;
+
+if(i.pedidoStatus==="pronto")pronto+=q;
+
+if(i.pedidoStatus==="entregue")entregue+=q;
+
+})
+
+});
+
+document.getElementById("pedidosPendentes").textContent=p;
+document.getElementById("pedidosEmPreparo").textContent=prep;
+document.getElementById("pedidosTotalItens").textContent=total;
+
+document.getElementById("fluxoPendentes").textContent=p;
+document.getElementById("fluxoPreparo").textContent=prep;
+document.getElementById("fluxoProntos").textContent=pronto;
+document.getElementById("fluxoEntregues").textContent=entregue
+
+}
+
+function enviarItemPreparo(mesaId,itemId){
+
+const m=mesas.find(
+x=>String(x.id)===String(mesaId)
+);
+
+if(!m)return;
+
+const item=m.itens.find(
+x=>String(x.id)===String(itemId)
+);
+
+if(!item)return;
+
+if(item.pedidoStatus!=="pendente"){
+
+mostrarMensagem(
+"Este item já foi enviado para preparo.",
+"erro"
+);
+
+return
+}
+
+item.pedidoStatus="preparo";
+
+salvarMesas();
+
+renderizarPedidos();
+renderizarPreparo();
+renderizarMesas();
+renderizarCaixa();
+renderizarPainel();
+
+mostrarMensagem(
+item.quantidade+"x "+item.nome+" enviado para preparo!",
+"sucesso"
+)
+
+}
+
+function criarCardPedido(m,status){
+
+const itens=m.itens.filter(
+i=>i.pedidoStatus===status
+);
+
+if(!itens.length)return"";
+
+const totalItens=itens.reduce(
+(t,i)=>t+Number(i.quantidade||0),
+0
+);
+
+const nomeStatus=
+status==="pendente"?
+"PENDENTE":
+status==="preparo"?
+"EM PREPARO":
+status==="pronto"?
+"PRONTO":
+"ENTREGUE";
+
+const classeBadge=
+status==="pendente"?
+"badge-pendente":
+status==="preparo"?
+"badge-preparo":
+status==="pronto"?
+"badge-pronto":
+"badge-entregue";
+
+let botao="";
+
+if(status==="pendente"){
+
+botao=`
+
+<button
+type="button"
+class="pedido-botao preparo"
+data-acao="enviar-pedido-preparo"
+data-id="${m.id}">
+
+🔥 Enviar todos os ${totalItens}
+${totalItens===1?"item":"itens"} para preparo
+
+</button>
+
+`;
+
+}
+
+if(status==="preparo"){
+
+botao=`
+
+<button
+type="button"
+class="pedido-botao pronto"
+data-acao="abrir-preparo"
+data-id="${m.id}">
+
+🔥 Ver itens em preparo
+
+</button>
+
+`;
+
+}
+
+if(status==="pronto"){
+
+botao=`
+
+<button
+type="button"
+class="pedido-botao entregue"
+data-acao="abrir-pronto"
+data-id="${m.id}">
+
+📦 Conferir itens prontos
+
+</button>
+
+`;
+
+}
+
+return `
+
+<div class="pedido-card">
+
+<div class="pedido-cabecalho">
+
+<div>
+
+<h4>🪑 Mesa ${m.numero}</h4>
+
+<p class="pedido-cliente">
+👤 ${escaparHTML(m.cliente)}
+•
+Comanda ${escaparHTML(m.comanda)}
+</p>
+
+</div>
+
+<span class="badge ${classeBadge}">
+${nomeStatus}
+</span>
+
+</div>
+
+${
+status==="pendente"?
+`<div class="pedido-ajuda">
+💡 Você pode enviar cada produto separadamente para a cozinha ou usar o botão abaixo para enviar todos.
+</div>`:""
+}
+
+${itens.map(i=>`
+
+<div class="pedido-item">
+
+<div class="pedido-item-info">
+
+<strong>${i.quantidade}x</strong>
+${escaparHTML(i.nome)}
+
+<br>
+
+<small>
+${formatarMoeda(
+Number(i.preco||0)*
+Number(i.quantidade||0)
+)}
+</small>
+
+</div>
+
+${
+status==="pendente"?
+`<div class="pedido-item-acao">
+
+<button
+type="button"
+class="btn-item-preparo"
+data-acao="enviar-item-preparo"
+data-mesa-id="${m.id}"
+data-item-id="${i.id}">
+
+🔥 Enviar este item para preparo
+
+</button>
+
+</div>`:""
+}
+
+</div>
+
+`).join("")}
+
+<div class="pedido-total">
+
+<span>
+${totalItens}
+${totalItens===1?"item":"itens"}
+</span>
+
+<span>
+${formatarMoeda(
+itens.reduce(
+(t,i)=>
+t+
+Number(i.preco||0)*
+Number(i.quantidade||0),
+0
+)
+)}
+</span>
+
+</div>
+
+${botao}
+
+</div>
+
+`;
+
+}
+
+function renderizarPedidos(){
+
+atualizarResumoPedidos();
+
+const l=document.getElementById("listaPedidos");
+
+const abertas=mesas.filter(
+m=>m.status==="aberta"&&m.itens.length
+);
+
+if(!abertas.length){
+
+l.innerHTML=`
+
+<div class="card">
+
+<h3>🧾 Nenhum pedido aberto</h3>
+
+<p>
+Quando uma mesa receber produtos,
+o pedido aparecerá aqui automaticamente.
+</p>
+
+</div>
+
+`;
+
+return
+}
+
+const pendentes=abertas
+.map(m=>criarCardPedido(m,"pendente"))
+.filter(Boolean)
+.join("");
+
+const preparo=abertas
+.map(m=>criarCardPedido(m,"preparo"))
+.filter(Boolean)
+.join("");
+
+const prontos=abertas
+.map(m=>criarCardPedido(m,"pronto"))
+.filter(Boolean)
+.join("");
+
+const entregues=abertas
+.map(m=>criarCardPedido(m,"entregue"))
+.filter(Boolean)
+.join("");
+
+l.innerHTML=`
+
+<div class="pedidos-colunas">
+
+<div class="pedidos-coluna pendente">
+
+<h3>🟡 PENDENTES</h3>
+
+${pendentes||
+`<div class="pedido-vazio">
+Nenhum pedido aguardando envio.
+</div>`}
+
+</div>
+
+<div class="pedidos-coluna preparo">
+
+<h3>🔥 EM PREPARO</h3>
+
+${preparo||
+`<div class="pedido-vazio">
+Nenhum pedido em preparo.
+</div>`}
+
+</div>
+
+<div class="pedidos-coluna pronto">
+
+<h3>✅ PRONTOS</h3>
+
+${prontos||
+`<div class="pedido-vazio">
+Nenhum pedido pronto.
+</div>`}
+
+</div>
+
+</div>
+
+<div class="card" style="margin-top:20px">
+
+<h3>📦 Pedidos entregues</h3>
+
+${entregues||
+`<div class="pedido-vazio">
+Nenhum item entregue ainda.
+</div>`}
+
+</div>
+
+`;
+
+}
+
+function enviarPedidoPreparo(id){
+
+const m=mesas.find(
+x=>String(x.id)===String(id)
+);
+
+if(!m)return;
+
+let q=0;
+
+m.itens.forEach(i=>{
+
+if(i.pedidoStatus==="pendente"){
+
+i.pedidoStatus="preparo";
+
+q+=Number(i.quantidade||0)
+
+}
+
+});
+
+if(!q){
+
+mostrarMensagem(
+"Não existem itens pendentes.",
+"erro"
+);
+
+return
+}
+
+salvarMesas();
+
+renderizarPedidos();
+renderizarPreparo();
+renderizarMesas();
+renderizarCaixa();
+renderizarPainel();
+
+mostrarMensagem(
+q+" item(ns) enviado(s) para preparo!",
+"sucesso"
+)
+
+}
+
+function renderizarPreparo(){
+
+const l=document.getElementById("listaPreparo");
+
+const ms=mesas.filter(
+m=>m.itens.some(
+i=>i.pedidoStatus==="preparo"
+)
+);
+
+let itens=0,
+pc=0;
+
+ms.forEach(m=>
+m.itens.forEach(i=>{
+
+if(i.pedidoStatus==="preparo"){
+
+itens+=Number(i.quantidade||0);
+pc++
+
+}
+
+})
+);
+
+document.getElementById("mesasEmPreparo").textContent=ms.length;
+document.getElementById("itensEmPreparo").textContent=itens;
+document.getElementById("produtosEmPreparo").textContent=pc;
+
+if(!ms.length){
+
+l.innerHTML=
+`<div class="card">Nenhum item em preparo.</div>`;
+
+return
+}
+
+l.innerHTML=ms.map(m=>`
+
+<div class="item-card">
+
+<h3>🔥 Mesa ${m.numero}</h3>
+
+<p>
+Cliente:
+<strong>${escaparHTML(m.cliente)}</strong>
+</p>
+
+${
+m.itens
+.filter(i=>i.pedidoStatus==="preparo")
+.map(i=>`
+
+<div class="item-linha">
+
+<strong>
+${i.quantidade}x ${escaparHTML(i.nome)}
+</strong>
+
+<button
+type="button"
+class="btn-marcar-pronto"
+data-acao="marcar-pronto"
+data-mesa-id="${m.id}"
+data-item-id="${i.id}">
+
+✅ Marcar como pronto
+
+</button>
+
+</div>
+
+`).join("")
+}
+
+</div>
+
+`).join("")
+
+}
+
+function marcarItemComoPronto(mid,iid){
+
+const m=mesas.find(
+x=>String(x.id)===String(mid)
+);
+
+const i=m&&m.itens.find(
+x=>String(x.id)===String(iid)
+);
+
+if(!i||i.pedidoStatus!=="preparo")return;
+
+i.pedidoStatus="pronto";
+
+salvarMesas();
+
+renderizarPreparo();
+renderizarPronto();
+renderizarPedidos();
+renderizarMesas();
+renderizarCaixa();
+renderizarPainel();
+
+mostrarMensagem(
+"Item marcado como pronto!",
+"sucesso"
+)
+
+}
+
+function renderizarPronto(){
+
+const l=document.getElementById("listaPronto");
+
+const ms=mesas.filter(
+m=>m.itens.some(
+i=>i.pedidoStatus==="pronto"
+)
+);
+
+let itens=0,
+pc=0;
+
+ms.forEach(m=>
+m.itens.forEach(i=>{
+
+if(i.pedidoStatus==="pronto"){
+
+itens+=Number(i.quantidade||0);
+pc++
+
+}
+
+})
+);
+
+document.getElementById("mesasProntas").textContent=ms.length;
+document.getElementById("itensProntos").textContent=itens;
+document.getElementById("produtosProntos").textContent=pc;
+
+if(!ms.length){
+
+l.innerHTML=
+`<div class="card">Nenhum item pronto.</div>`;
+
+return
+}
+
+l.innerHTML=ms.map(m=>`
+
+<div class="item-card">
+
+<h3>✅ Mesa ${m.numero}</h3>
+
+<p>
+Cliente:
+<strong>${escaparHTML(m.cliente)}</strong>
+</p>
+
+${
+m.itens
+.filter(i=>i.pedidoStatus==="pronto")
+.map(i=>`
+
+<div class="item-linha">
+
+<strong>
+${i.quantidade}x ${escaparHTML(i.nome)}
+</strong>
+
+<button
+type="button"
+class="btn-marcar-entregue"
+data-acao="marcar-entregue"
+data-mesa-id="${m.id}"
+data-item-id="${i.id}">
+
+📦 Marcar como entregue
+
+</button>
+
+</div>
+
+`).join("")
+}
+
+</div>
+
+`).join("")
+
+}
+
+function marcarItemComoEntregue(mid,iid){
+
+const m=mesas.find(
+x=>String(x.id)===String(mid)
+);
+
+const i=m&&m.itens.find(
+x=>String(x.id)===String(iid)
+);
+
+if(!i||i.pedidoStatus!=="pronto")return;
+
+i.pedidoStatus="entregue";
+
+salvarMesas();
+
+renderizarPronto();
+renderizarEntregue();
+renderizarPedidos();
+renderizarMesas();
+renderizarCaixa();
+renderizarPainel();
+
+mostrarMensagem(
+"Item marcado como entregue!",
+"sucesso"
+)
+
+}
+
+function renderizarEntregue(){
+
+const l=document.getElementById("listaEntregue");
+
+const ms=mesas.filter(
+m=>m.itens.some(
+i=>i.pedidoStatus==="entregue"
+)
+);
+
+let itens=0,
+pc=0;
+
+ms.forEach(m=>
+m.itens.forEach(i=>{
+
+if(i.pedidoStatus==="entregue"){
+
+itens+=Number(i.quantidade||0);
+pc++
+
+}
+
+})
+);
+
+document.getElementById("mesasEntregues").textContent=ms.length;
+document.getElementById("itensEntregues").textContent=itens;
+document.getElementById("produtosEntregues").textContent=pc;
+
+if(!ms.length){
+
+l.innerHTML=
+`<div class="card">Nenhum item entregue.</div>`;
+
+return
+}
+
+l.innerHTML=ms.map(m=>{
+
+const todos=
+m.itens.length>0&&
+m.itens.every(
+i=>i.pedidoStatus==="entregue"
+);
+
+return `
+
+<div class="item-card">
+
+<h3>📦 Mesa ${m.numero}</h3>
+
+<p>
+Cliente:
+<strong>${escaparHTML(m.cliente)}</strong>
+</p>
+
+${
+todos?
+`<div class="alerta alerta-ok">
+✅ Todos os produtos foram entregues.
+A conta está pronta para recebimento.
+</div>`:
+`<div class="alerta alerta-baixo">
+⏳ Ainda existem produtos aguardando entrega.
+</div>`
+}
+
+</div>
+
+`
+
+}).join("")
+
+}
+
+function renderizarCaixa(){
+
+const l=document.getElementById("listaCaixa");
+
+const mc=mesas.filter(
+m=>m.status==="aberta"&&m.itens.length
+);
+
+if(!mc.length){
+
+l.innerHTML=`
+
+<div class="card">
+
+<h3>🟢 Nenhuma conta aguardando.</h3>
+
+<p>
+Quando uma mesa tiver produtos,
+ela aparecerá aqui para recebimento.
+</p>
+
+</div>
+
+`
+
+}else{
+
+l.innerHTML=mc.map(m=>{
+
+const total=calcularTotalMesa(m);
+
+const todos=m.itens.every(
+i=>i.pedidoStatus==="entregue"
+);
+
+return `
+
+<div class="item-card caixa-card">
+
+<h3>💰 Mesa ${m.numero}</h3>
+
+<span class="badge badge-aberta">
+CONTA ABERTA
+</span>
+
+<p>
+Cliente:
+<strong>${escaparHTML(m.cliente)}</strong>
+</p>
+
+<p>
+Comanda:
+<strong>${escaparHTML(m.comanda)}</strong>
+</p>
+
+<hr>
+
+${m.itens.map(i=>`
+
+<div class="item-linha">
+
+<div class="item-linha-top">
+
+<span>
+${i.quantidade}x ${escaparHTML(i.nome)}
+</span>
+
+<strong>
+${formatarMoeda(
+Number(i.preco||0)*
+Number(i.quantidade||0)
+)}
+</strong>
+
+</div>
+
+<small>
+${
+i.pedidoStatus==="entregue"?
+"📦 Entregue":
+"⏳ "+i.pedidoStatus
+}
+</small>
+
+</div>
+
+`).join("")}
+
+<h2>
+Total: ${formatarMoeda(total)}
+</h2>
+
+${
+todos?
+`
+
+<label>Forma de pagamento</label>
+
+<select id="pagamento-${m.id}">
+
+<option value="">Selecione</option>
+<option>Dinheiro</option>
+<option>Cartão de débito</option>
+<option>Cartão de crédito</option>
+<option>Pix</option>
+
+</select>
+
+<button
+type="button"
+class="btn-receber"
+onclick="window.receberContaCaixa('${m.id}');return false;">
+
+💰 Receber ${formatarMoeda(total)}
+
+</button>
+
+`:
+`
+
+<div class="alerta alerta-baixo">
+
+⏳ A conta só poderá ser recebida
+quando todos os produtos estiverem entregues.
+
+</div>
+
+`
+}
+
+</div>
+
+`
+
+}).join("")
+
+}
+
+renderizarHistoricoCaixa()
+
+}
+
+function renderizarHistoricoCaixa(){
+
+const h=document.getElementById("historicoCaixa");
+
+if(!vendasCaixa.length){
+
+h.innerHTML=
+"<p>Nenhuma venda recebida ainda.</p>";
+
+return
+}
+
+h.innerHTML=vendasCaixa.map(v=>`
+
+<div class="item-card">
+
+<h3>
+${v.origem==="delivery"?
+"🛵 Delivery":
+"💰 Mesa "+v.mesaNumero}
+</h3>
+
+<p>
+Cliente:
+<strong>${escaparHTML(v.cliente)}</strong>
+</p>
+
+${
+v.endereco?
+`<p>
+📍 Endereço:
+<strong>${escaparHTML(v.endereco)}</strong>
+</p>`:""
+}
+
+<p>
+Pagamento:
+<strong>${escaparHTML(v.formaPagamento)}</strong>
+</p>
+
+<p>
+Data:
+${new Date(v.data).toLocaleString("pt-BR")}
+</p>
+
+<h3>
+Total: ${formatarMoeda(v.total)}
+</h3>
+
+</div>
+
+`).join("")
+
+}
+
+function calcularConsumoDaVenda(m){
+
+const c={};
+
+if(!m||!Array.isArray(m.itens))
+return c;
+
+m.itens.forEach(i=>{
+
+const id=String(i.id),
+q=Number(i.quantidade||0);
+
+if(q>0)c[id]=(c[id]||0)+q
+
+});
+
+return c
+
+}
+
+function verificarEstoqueParaVenda(m){
+
+const c=calcularConsumoDaVenda(m),
+p=[];
+
+Object.keys(c).forEach(id=>{
+
+const x=produtos.find(
+a=>String(a.id)===String(id)
+);
+
+if(!x)
+p.push("Produto não encontrado.");
+
+else if(
+Number(c[id])>
+Number(x.estoque||0)
+){
+
+p.push(
+x.nome+
+" — estoque disponível: "+
+Number(x.estoque||0)+
+", necessário: "+
+Number(c[id])
+)
+
+}
+
+});
+
+return p
+
+}
+
+function baixarEstoqueDaVenda(m){
+
+const c=calcularConsumoDaVenda(m);
+
+const data=new Date().toISOString();
+
+Object.keys(c).forEach(id=>{
+
+const q=Number(c[id]||0);
+
+const p=produtos.find(
+x=>String(x.id)===String(id)
+);
+
+if(!p||q<=0)return;
+
+const ant=Number(p.estoque||0);
+
+const novo=ant-q;
+
+p.estoque=novo;
+
+movimentacoes.unshift({
+
+id:Date.now().toString()+
+Math.random().toString(36).substring(2),
+
+produtoId:p.id,
+produtoNome:p.nome,
+tipo:"saida",
+quantidade:q,
+estoqueAnterior:ant,
+estoqueNovo:novo,
+motivo:"Venda - Mesa "+m.numero,
+data
+
+})
+
+});
+
+salvarProdutos();
+salvarMovimentacoes()
+
+}
+
+function receberContaCaixa(id){
+
+const m=mesas.find(
+x=>String(x.id)===String(id)
+);
+
+if(!m){
+mostrarMensagem("Mesa não encontrada.","erro");
+return
+}
+
+if(m.status!=="aberta"){
+mostrarMensagem("Essa mesa não está aberta.","erro");
+return
+}
+
+if(!m.itens.length){
+mostrarMensagem(
+"Esta mesa não possui produtos na conta.",
+"erro"
+);
+return
+}
+
+if(!m.itens.every(
+i=>i.pedidoStatus==="entregue"
+)){
+
+mostrarMensagem(
+"Todos os produtos precisam estar entregues antes do pagamento.",
+"erro"
+);
+
+return
+}
+
+const problemas=verificarEstoqueParaVenda(m);
+
+if(problemas.length){
+
+mostrarMensagem(
+"Não é possível receber: estoque insuficiente.",
+"erro"
+);
+
+return
+}
+
+const s=document.getElementById(
+"pagamento-"+m.id
+);
+
+if(!s||!s.value){
+
+mostrarMensagem(
+"Selecione a forma de pagamento.",
+"erro"
+);
+
+return
+}
+
+mesaPagamentoId=m.id;
+
+document.getElementById("resumoPagamento").innerHTML=`
+
+<p>
+<strong>🪑 Mesa:</strong>
+${m.numero}
+</p>
+
+<p>
+<strong>👤 Cliente:</strong>
+${escaparHTML(m.cliente)}
+</p>
+
+<p>
+<strong>🧾 Comanda:</strong>
+${escaparHTML(m.comanda)}
+</p>
+
+<p>
+<strong>💳 Pagamento:</strong>
+${escaparHTML(s.value)}
+</p>
+
+<div class="valor">
+${formatarMoeda(calcularTotalMesa(m))}
+</div>
+
+<div class="alerta alerta-ok">
+📦 O estoque será baixado automaticamente após a confirmação.
+</div>
+
+`;
+
+document.getElementById("modalPagamento")
+.classList.add("ativo")
+
+}
+
+function cancelarPagamentoCaixa(){
+
+mesaPagamentoId=null;
+
+document.getElementById("modalPagamento")
+.classList.remove("ativo")
+
+}
+
+function confirmarPagamentoCaixa(){
+
+if(!mesaPagamentoId){
+
+mostrarMensagem(
+"Nenhuma mesa selecionada.",
+"erro"
+);
+
+return
+}
+
+const m=mesas.find(
+x=>String(x.id)===String(mesaPagamentoId)
+);
+
+if(!m){
+
+cancelarPagamentoCaixa();
+return
+}
+
+const s=document.getElementById(
+"pagamento-"+m.id
+);
+
+if(!s||!s.value){
+
+mostrarMensagem(
+"Selecione a forma de pagamento.",
+"erro"
+);
+
+return
+}
+
+if(verificarEstoqueParaVenda(m).length){
+
+mostrarMensagem(
+"Estoque insuficiente. A venda não foi finalizada.",
+"erro"
+);
+
+return
+}
+
+const venda={
+
+id:Date.now().toString()+
+Math.random().toString(36).substring(2),
+
+origem:"mesa",
+mesaId:m.id,
+mesaNumero:m.numero,
+cliente:m.cliente,
+comanda:m.comanda,
+
+itens:m.itens.map(i=>{
+
+const p=produtos.find(
+x=>String(x.id)===String(i.id)
+);
+
+const c=p?
+Number(p.custo||0):
+0;
+
+const q=Number(i.quantidade||0);
+
+return {
+
+id:i.id,
+nome:i.nome,
+preco:Number(i.preco||0),
+custo:c,
+quantidade:q,
+subtotal:Number(i.preco||0)*q,
+custoTotal:c*q,
+pedidoStatus:"entregue"
+
+}
+
+}),
+
+total:calcularTotalMesa(m),
+formaPagamento:s.value,
+data:new Date().toISOString()
+
+};
+
+baixarEstoqueDaVenda(m);
+
+vendasCaixa.unshift(venda);
+
+salvarCaixa();
+
+m.status="livre";
+m.cliente="";
+m.comanda="";
+m.dataAbertura=null;
+m.itens=[];
+
+salvarMesas();
+
+const n=m.numero;
+
+cancelarPagamentoCaixa();
+
+atualizarTudo();
+
+mostrarMensagem(
+"Pagamento recebido! Estoque baixado e Mesa "+
+n+
+" liberada com sucesso.",
+"sucesso"
+)
+
+}
+
+function calcularTotalDelivery(){
+
+return Object.keys(carrinhoDelivery)
+.reduce((t,id)=>{
+
+const p=produtos.find(
+x=>String(x.id)===String(id)
+);
+
+return t+
+(p?
+Number(p.preco||0)*
+Number(carrinhoDelivery[id]||0):
+0)
+
+},0)
+
+}
+
+function renderizarDeliveryProdutos(){
+
+const l=document.getElementById(
+"listaProdutosDelivery"
+);
+
+const a=produtos.filter(
+p=>p.ativo!==false
+);
+
+if(!a.length){
+
+l.innerHTML=
+`<div class="sem-dados">
+Cadastre produtos primeiro.
+</div>`;
+
+atualizarTotalDelivery();
+
+return
+}
+
+l.innerHTML=a.map(p=>{
+
+const id=String(p.id);
+
+const q=Number(
+carrinhoDelivery[id]||0
+);
+
+const foto=p.foto?
+`<img src="${p.foto}" alt="${escaparHTML(p.nome)}">`:
+`<div class="delivery-produto-sem-foto">
+🍽️
+</div>`;
+
+return `
+
+<div class="delivery-produto">
+
+${foto}
+
+<div class="delivery-produto-info">
+
+<strong>
+${escaparHTML(p.nome)}
+</strong>
+
+<small>
+${formatarMoeda(p.preco)}
+•
+Estoque: ${Number(p.estoque||0)}
+</small>
+
+</div>
+
+<div class="delivery-quantidade">
+
+<button
+type="button"
+data-delivery-acao="diminuir"
+data-id="${p.id}">
+−
+</button>
+
+<span>${q}</span>
+
+<button
+type="button"
+data-delivery-acao="aumentar"
+data-id="${p.id}">
++
+</button>
+
+</div>
+
+</div>
+
+`
+
+}).join("");
+
+atualizarTotalDelivery()
+
+}
+
+function atualizarTotalDelivery(){
+
+document.getElementById("deliveryTotal")
+.textContent=
+formatarMoeda(
+calcularTotalDelivery()
+)
+
+}
+
+function aumentarProdutoDelivery(id){
+
+const p=produtos.find(
+x=>String(x.id)===String(id)
+);
+
+if(!p)return;
+
+const q=Number(
+carrinhoDelivery[String(id)]||0
+);
+
+if(q>=Number(p.estoque||0)){
+
+mostrarMensagem(
+"Quantidade maior que o estoque disponível.",
+"erro"
+);
+
+return
+}
+
+carrinhoDelivery[String(id)]=q+1;
+
+renderizarDeliveryProdutos()
+
+}
+
+function diminuirProdutoDelivery(id){
+
+const k=String(id);
+
+const q=Number(
+carrinhoDelivery[k]||0
+);
+
+if(q<=1)
+delete carrinhoDelivery[k];
+else
+carrinhoDelivery[k]=q-1;
+
+renderizarDeliveryProdutos()
+
+}
+
+function limparFormularioDelivery(){
+
+document.getElementById("formDelivery")
+.reset();
+
+carrinhoDelivery={};
+
+renderizarDeliveryProdutos()
+
+}
+
+function criarPedidoDelivery(e){
+
+e.preventDefault();
+
+const cliente=document.getElementById("deliveryCliente").value.trim(),
+telefone=document.getElementById("deliveryTelefone").value.trim(),
+endereco=document.getElementById("deliveryEndereco").value.trim(),
+pagamento=document.getElementById("deliveryPagamento").value,
+observacao=document.getElementById("deliveryObservacao").value.trim();
+
+if(!cliente||!telefone||!endereco||!pagamento){
+
+mostrarMensagem(
+"Preencha os dados obrigatórios do cliente.",
+"erro"
+);
+
+return
+}
+
+const itens=[];
+
+Object.keys(carrinhoDelivery).forEach(id=>{
+
+const q=Number(carrinhoDelivery[id]||0);
+
+const p=produtos.find(
+x=>String(x.id)===String(id)
+);
+
+if(!q||!p)return;
+
+if(q>Number(p.estoque||0))
+throw new Error(
+"Estoque insuficiente para "+p.nome
+);
+
+itens.push({
+
+id:p.id,
+nome:p.nome,
+preco:Number(p.preco||0),
+custo:Number(p.custo||0),
+quantidade:q,
+subtotal:Number(p.preco||0)*q,
+custoTotal:Number(p.custo||0)*q,
+status:"novo"
+
+})
+
+});
+
+if(!itens.length){
+
+mostrarMensagem(
+"Adicione pelo menos um produto ao pedido.",
+"erro"
+);
+
+return
+}
+
+const total=itens.reduce(
+(s,i)=>s+Number(i.subtotal||0),
+0
+);
+
+pedidosDelivery.unshift({
+
+id:"delivery-"+
+Date.now().toString()+
+Math.random().toString(36).substring(2),
+
+origem:"delivery",
+cliente,
+telefone,
+endereco,
+observacao,
+formaPagamento:pagamento,
+itens,
+total,
+status:"novo",
+dataCriacao:new Date().toISOString(),
+dataAtualizacao:new Date().toISOString(),
+pago:false
+
+});
+
+salvarDelivery();
+
+limparFormularioDelivery();
+
+renderizarDelivery();
+renderizarPainel();
+
+mostrarMensagem(
+"Pedido de delivery criado com sucesso!",
+"sucesso"
+)
+
+}
+
+function renderizarDelivery(){
+
+const l=document.getElementById("listaDelivery");
+
+let n=0,
+p=0,
+pr=0,
+s=0;
+
+pedidosDelivery.forEach(x=>{
+
+if(x.status==="novo")n++;
+if(x.status==="preparo")p++;
+if(x.status==="pronto")pr++;
+if(x.status==="saiu")s++;
+
+});
+
+document.getElementById("deliveryNovos").textContent=n;
+document.getElementById("deliveryPreparo").textContent=p;
+document.getElementById("deliveryProntos").textContent=pr;
+document.getElementById("deliverySaiu").textContent=s;
+
+if(!pedidosDelivery.length){
+
+l.innerHTML=`
+
+<div class="card">
+
+<h3>🛵 Nenhum pedido de delivery.</h3>
+
+<p>
+Os novos pedidos aparecerão aqui.
+</p>
+
+</div>
+
+`;
+
+return
+}
+
+l.innerHTML=pedidosDelivery.map(x=>{
+
+const classe=
+x.status==="novo"?
+"novo":
+x.status==="preparo"?
+"preparo":
+x.status==="pronto"?
+"pronto":
+x.status==="saiu"?
+"saiu":
+"";
+
+let texto=
+x.status==="novo"?
+"NOVO":
+x.status==="preparo"?
+"EM PREPARO":
+x.status==="pronto"?
+"PRONTO":
+x.status==="saiu"?
+"SAIU PARA ENTREGA":
+x.pago?
+"ENTREGUE • RECEBIDO":
+"ENTREGUE • AGUARDANDO RECEBIMENTO";
+
+let badge=
+x.status==="novo"?
+"badge-novo":
+x.status==="preparo"?
+"badge-preparo":
+x.status==="pronto"?
+"badge-pronto":
+x.status==="saiu"?
+"badge-saiu":
+"badge-entregue";
+
+return `
+
+<div class="item-card delivery-card ${classe}">
+
+<div class="delivery-resumo">
+
+<div class="delivery-resumo-item">
+👤 Cliente
+<strong>${escaparHTML(x.cliente)}</strong>
+</div>
+
+<div class="delivery-resumo-item">
+📱 Telefone
+<strong>${escaparHTML(x.telefone)}</strong>
+</div>
+
+<div class="delivery-resumo-item">
+💳 Pagamento
+<strong>${escaparHTML(x.formaPagamento)}</strong>
+</div>
+
+<div class="delivery-resumo-item">
+📅 Pedido
+<strong>${new Date(x.dataCriacao).toLocaleString("pt-BR")}</strong>
+</div>
+
+</div>
+
+<p>
+<strong>📍 Endereço:</strong>
+${escaparHTML(x.endereco)}
+</p>
+
+${
+x.observacao?
+`<p>
+<strong>📝 Observação:</strong>
+${escaparHTML(x.observacao)}
+</p>`:""
+}
+
+<hr>
+
+<h3>🍔 Produtos</h3>
+
+${x.itens.map(i=>`
+
+<div class="item-linha">
+
+<div class="item-linha-top">
+
+<span>
+${i.quantidade}x ${escaparHTML(i.nome)}
+</span>
+
+<strong>
+${formatarMoeda(i.subtotal)}
+</strong>
+
+</div>
+
+</div>
+
+`).join("")}
+
+<div class="delivery-total">
+
+Total
+
+<strong>
+${formatarMoeda(x.total)}
+</strong>
+
+</div>
+
+<p style="margin-top:18px">
+
+Status:
+
+<span class="badge ${badge}">
+${texto}
+</span>
+
+</p>
+
+${
+x.status==="novo"?
+`<button
+class="btn-enviar-preparo"
+type="button"
+data-delivery-acao="preparo"
+data-id="${x.id}">
+🔥 Enviar para preparo
+</button>`:""
+}
+
+${
+x.status==="preparo"?
+`<button
+class="btn-marcar-pronto"
+type="button"
+data-delivery-acao="pronto"
+data-id="${x.id}">
+✅ Marcar como pronto
+</button>`:""
+}
+
+${
+x.status==="pronto"?
+`<button
+class="btn"
+style="width:100%;margin-top:11px;background:linear-gradient(135deg,#f97316,#ea580c);color:#fff"
+type="button"
+data-delivery-acao="saiu"
+data-id="${x.id}">
+🛵 Saiu para entrega
+</button>`:""
+}
+
+${
+x.status==="saiu"?
+`<button
+class="btn-marcar-entregue"
+type="button"
+data-delivery-acao="entregue"
+data-id="${x.id}">
+📦 Marcar como entregue
+</button>`:""
+}
+
+${
+x.status==="entregue"&&!x.pago?
+`<button
+class="btn-receber"
+type="button"
+data-delivery-acao="receber"
+data-id="${x.id}">
+💰 Confirmar recebimento
+</button>`:""
+}
+
+${
+x.pago?
+`<div class="alerta alerta-ok">
+✅ Pedido finalizado e registrado no Caixa.
+</div>`:""
+}
+
+</div>
+
+`
+
+}).join("")
+
+}
+
+function alterarStatusDelivery(id,status){
+
+const p=pedidosDelivery.find(
+x=>String(x.id)===String(id)
+);
+
+if(!p)return;
+
+p.status=status;
+p.dataAtualizacao=new Date().toISOString();
+
+salvarDelivery();
+
+renderizarDelivery();
+renderizarPainel();
+
+mostrarMensagem(
+"Status do delivery atualizado!",
+"sucesso"
+)
+
+}
+
+function abrirPagamentoDelivery(id){
+
+const p=pedidosDelivery.find(
+x=>String(x.id)===String(id)
+);
+
+if(!p)return;
+
+if(p.status!=="entregue"){
+
+mostrarMensagem(
+"O pedido precisa estar entregue.",
+"erro"
+);
+
+return
+}
+
+if(p.pago){
+
+mostrarMensagem(
+"Este pedido já foi recebido.",
+"erro"
+);
+
+return
+}
+
+for(const i of p.itens){
+
+const prod=produtos.find(
+x=>String(x.id)===String(i.id)
+);
+
+if(!prod){
+
+mostrarMensagem(
+i.nome+" não foi encontrado.",
+"erro"
+);
+
+return
+}
+
+if(
+Number(i.quantidade||0)>
+Number(prod.estoque||0)
+){
+
+mostrarMensagem(
+prod.nome+" — estoque insuficiente.",
+"erro"
+);
+
+return
+}
+
+}
+
+deliveryPagamentoId=p.id;
+
+document.getElementById(
+"resumoPagamentoDelivery"
+).innerHTML=`
+
+<p>
+<strong>🛵 Delivery</strong>
+</p>
+
+<p>
+<strong>👤 Cliente:</strong>
+${escaparHTML(p.cliente)}
+</p>
+
+<p>
+<strong>📱 Telefone:</strong>
+${escaparHTML(p.telefone)}
+</p>
+
+<p>
+<strong>📍 Endereço:</strong>
+${escaparHTML(p.endereco)}
+</p>
+
+<p>
+<strong>💳 Pagamento:</strong>
+${escaparHTML(p.formaPagamento)}
+</p>
+
+<div class="valor">
+${formatarMoeda(p.total)}
+</div>
+
+<div class="alerta alerta-ok">
+📦 O estoque será baixado automaticamente.
+</div>
+
+`;
+
+document.getElementById(
+"modalPagamentoDelivery"
+).classList.add("ativo")
+
+}
+
+function cancelarPagamentoDelivery(){
+
+deliveryPagamentoId=null;
+
+document.getElementById(
+"modalPagamentoDelivery"
+).classList.remove("ativo")
+
+}
+
+function confirmarPagamentoDelivery(){
+
+if(!deliveryPagamentoId)return;
+
+const p=pedidosDelivery.find(
+x=>String(x.id)===String(deliveryPagamentoId)
+);
+
+if(!p){
+
+cancelarPagamentoDelivery();
+return
+}
+
+for(const i of p.itens){
+
+const prod=produtos.find(
+x=>String(x.id)===String(i.id)
+);
+
+if(
+!prod||
+Number(i.quantidade||0)>
+Number(prod.estoque||0)
+){
+
+mostrarMensagem(
+"Estoque insuficiente para "+i.nome+".",
+"erro"
+);
+
+return
+}
+
+}
+
+p.itens.forEach(i=>{
+
+const prod=produtos.find(
+x=>String(x.id)===String(i.id)
+);
+
+if(!prod)return;
+
+const ant=Number(prod.estoque||0),
+q=Number(i.quantidade||0);
+
+prod.estoque=ant-q;
+
+movimentacoes.unshift({
+
+id:Date.now().toString()+
+Math.random().toString(36).substring(2),
+
+produtoId:prod.id,
+produtoNome:prod.nome,
+tipo:"saida",
+quantidade:q,
+estoqueAnterior:ant,
+estoqueNovo:ant-q,
+motivo:"Venda Delivery - "+p.cliente,
+data:new Date().toISOString()
+
+})
+
+});
+
+salvarProdutos();
+salvarMovimentacoes();
+
+vendasCaixa.unshift({
+
+id:Date.now().toString()+
+Math.random().toString(36).substring(2),
+
+origem:"delivery",
+deliveryId:p.id,
+cliente:p.cliente,
+telefone:p.telefone,
+endereco:p.endereco,
+observacao:p.observacao,
+
+itens:p.itens.map(i=>({
+
+id:i.id,
+nome:i.nome,
+preco:Number(i.preco||0),
+custo:Number(i.custo||0),
+quantidade:Number(i.quantidade||0),
+subtotal:Number(i.subtotal||0),
+custoTotal:Number(i.custoTotal||0)
+
+})),
+
+total:Number(p.total||0),
+formaPagamento:p.formaPagamento,
+data:new Date().toISOString()
+
+});
+
+salvarCaixa();
+
+p.pago=true;
+p.dataPagamento=new Date().toISOString();
+p.status="entregue";
+p.dataAtualizacao=new Date().toISOString();
+
+salvarDelivery();
+
+const c=p.cliente;
+
+cancelarPagamentoDelivery();
+
+atualizarTudo();
+
+mostrarMensagem(
+"Delivery de "+c+
+" recebido! Estoque baixado e venda registrada no Caixa.",
+"sucesso"
+)
+
+}
+
+function obterVendasDoPeriodo(){
+
+const i=document.getElementById(
+"relatorioDataInicio"
+).value;
+
+const f=document.getElementById(
+"relatorioDataFim"
+).value;
+
+return vendasCaixa.filter(v=>{
+
+const d=obterDataLocalISO(v.data);
+
+return(!i||d>=i)&&(!f||d<=f)
+
+})
+
+}
+
+function renderizarRelatorios(){
+
+const vendas=obterVendasDoPeriodo();
+
+let fat=0,
+custo=0,
+itens=0;
+
+const mesas=new Set(),
+pag={},
+pv={};
+
+vendas.forEach(v=>{
+
+fat+=Number(v.total||0);
+
+mesas.add(
+v.origem==="delivery"?
+"delivery-"+v.deliveryId:
+String(v.mesaId||v.mesaNumero)
+);
+
+const pg=v.formaPagamento||"Não informado";
+
+if(!pag[pg])
+pag[pg]={
+quantidade:0,
+valor:0
+};
+
+pag[pg].quantidade++;
+pag[pg].valor+=Number(v.total||0);
+
+(v.itens||[]).forEach(i=>{
+
+const q=Number(i.quantidade||0);
+
+const rec=Number(
+i.subtotal||
+Number(i.preco||0)*q
+);
+
+const ci=Number(
+i.custoTotal||
+Number(i.custo||0)*q
+);
+
+itens+=q;
+custo+=ci;
+
+const id=String(i.id||i.nome);
+
+if(!pv[id])
+pv[id]={
+nome:i.nome||"Produto",
+quantidade:0,
+faturamento:0,
+custo:0,
+lucro:0
+};
+
+pv[id].quantidade+=q;
+pv[id].faturamento+=rec;
+pv[id].custo+=ci;
+pv[id].lucro+=rec-ci
+
+})
+
+});
+
+const qtd=vendas.length;
+
+document.getElementById(
+"relatorioFaturamento"
+).textContent=formatarMoeda(fat);
+
+document.getElementById(
+"relatorioQuantidadeVendas"
+).textContent=qtd;
+
+document.getElementById(
+"relatorioTicketMedio"
+).textContent=
+formatarMoeda(qtd?fat/qtd:0);
+
+document.getElementById(
+"relatorioMesas"
+).textContent=mesas.size;
+
+document.getElementById(
+"relatorioItensVendidos"
+).textContent=itens;
+
+document.getElementById(
+"relatorioCusto"
+).textContent=formatarMoeda(custo);
+
+document.getElementById(
+"relatorioLucro"
+).textContent=formatarMoeda(fat-custo);
+
+document.getElementById(
+"relatorioProdutos"
+).textContent=produtos.length;
+
+document.getElementById(
+"relatorioPagamentos"
+).innerHTML=
+Object.keys(pag).length?
+`
+
+<table class="tabela">
+
+<thead>
+
+<tr>
+<th>Forma</th>
+<th>Vendas</th>
+<th>Total</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+${Object.keys(pag).map(n=>`
+
+<tr>
+
+<td>${escaparHTML(n)}</td>
+<td>${pag[n].quantidade}</td>
+<td>${formatarMoeda(pag[n].valor)}</td>
+
+</tr>
+
+`).join("")}
+
+</tbody>
+
+</table>
+`:
+`<div class="sem-dados">
+Nenhuma venda no período.
+</div>`;
+
+const lp=Object.values(pv)
+.sort((a,b)=>b.quantidade-a.quantidade);
+
+document.getElementById(
+"relatorioProdutosVendidos"
+).innerHTML=
+
+lp.length?
+
+lp.map(p=>`
+
+<tr>
+
+<td>${escaparHTML(p.nome)}</td>
+<td>${p.quantidade}</td>
+<td>${formatarMoeda(p.faturamento)}</td>
+<td>${formatarMoeda(p.custo)}</td>
+<td>${formatarMoeda(p.lucro)}</td>
+
+</tr>
+
+`).join(""):
+
+`<tr>
+<td colspan="5">
+Nenhuma venda no período.
+</td>
+</tr>`;
+
+const baixos=produtos.filter(
+p=>Number(p.estoque||0)<=
+Number(p.estoqueMinimo||0)
+);
+
+document.getElementById(
+"relatorioEstoqueBaixo"
+).innerHTML=
+
+baixos.length?
+
+baixos.map(p=>`
+
+<div class="item-card">
+
+<strong>
+${escaparHTML(p.nome)}
+</strong>
+
+<p>
+Estoque atual:
+<strong>${Number(p.estoque||0)}</strong>
+</p>
+
+<p>
+Estoque mínimo:
+<strong>${Number(p.estoqueMinimo||0)}</strong>
+</p>
+
+</div>
+
+`).join(""):
+
+`<div class="alerta alerta-ok">
+✅ Nenhum produto está com estoque baixo.
+</div>`;
+
+document.getElementById(
+"relatorioHistoricoVendas"
+).innerHTML=
+
+vendas.length?
+
+vendas.map(v=>`
+
+<div class="item-card">
+
+<h3>
+${v.origem==="delivery"?
+"🛵 Delivery":
+"💰 Mesa "+v.mesaNumero}
+</h3>
+
+<p>
+Cliente:
+<strong>${escaparHTML(v.cliente)}</strong>
+</p>
+
+${
+v.endereco?
+`<p>
+📍 Endereço:
+<strong>${escaparHTML(v.endereco)}</strong>
+</p>`:""
+}
+
+<p>
+Pagamento:
+<strong>${escaparHTML(v.formaPagamento)}</strong>
+</p>
+
+<p>
+Data:
+${new Date(v.data).toLocaleString("pt-BR")}
+</p>
+
+<h3>
+Total:
+${formatarMoeda(v.total)}
+</h3>
+
+</div>
+
+`).join(""):
+
+`<div class="sem-dados">
+Nenhuma venda encontrada no período.
+</div>`
+
+}
+
+function definirPeriodoHoje(){
+
+const h=dataHojeISO();
+
+document.getElementById(
+"relatorioDataInicio"
+).value=h;
+
+document.getElementById(
+"relatorioDataFim"
+).value=h;
+
+renderizarRelatorios()
+
+}
+
+function definirPeriodo7Dias(){
+
+const h=new Date();
+
+const i=new Date(h);
+
+i.setDate(i.getDate()-6);
+
+document.getElementById(
+"relatorioDataInicio"
+).value=
+obterDataLocalISO(i);
+
+document.getElementById(
+"relatorioDataFim"
+).value=
+obterDataLocalISO(h);
+
+renderizarRelatorios()
+
+}
+
+function definirPeriodoMes(){
+
+const h=new Date();
+
+const i=new Date(
+h.getFullYear(),
+h.getMonth(),
+1
+);
+
+const f=new Date(
+h.getFullYear(),
+h.getMonth()+1,
+0
+);
+
+document.getElementById(
+"relatorioDataInicio"
+).value=
+obterDataLocalISO(i);
+
+document.getElementById(
+"relatorioDataFim"
+).value=
+obterDataLocalISO(f);
+
+renderizarRelatorios()
+
+}
+
+function imprimirRelatorio(){
+
+renderizarRelatorios();
+
+setTimeout(
+()=>window.print(),
+100
+)
+
+}
+
+function fecharMesa(id){
+
+const m=mesas.find(
+x=>String(x.id)===String(id)
+);
+
+if(!m)return;
+
+if(m.itens.length){
+
+abrirModulo("caixa");
+
+mostrarMensagem(
+"Esta mesa possui uma conta. Finalize o recebimento no Caixa.",
+"erro"
+);
+
+return
+}
+
+if(!confirm(
+"Deseja realmente fechar a Mesa "+
+m.numero+"?"
+))return;
+
+m.status="livre";
+m.cliente="";
+m.comanda="";
+m.dataAbertura=null;
+m.itens=[];
+
+salvarMesas();
+
+renderizarMesas();
+renderizarPedidos();
+renderizarCaixa();
+renderizarPainel();
+
+mostrarMensagem(
+"Mesa fechada e liberada com sucesso!",
+"sucesso"
+)
+
+}
+
+function renderizarPainel(){
+
+const vendasHoje=vendasCaixa.filter(
+v=>obterDataLocalISO(v.data)===dataHojeISO()
+);
+
+let faturamento=0,
+custo=0;
+
+vendasHoje.forEach(v=>{
+
+faturamento+=Number(v.total||0);
+
+(v.itens||[]).forEach(i=>
+
+custo+=Number(
+i.custoTotal||
+Number(i.custo||0)*
+Number(i.quantidade||0)
+)
+
+)
+
+});
+
+const mesasAbertas=
+mesas.filter(
+m=>m.status==="aberta"
+).length;
+
+const deliveryEmAndamento=
+pedidosDelivery.filter(
+p=>!p.pago&&p.status!=="entregue"
+).length;
+
+const estoqueBaixo=
+produtos.filter(
+p=>Number(p.estoque||0)<=
+Number(p.estoqueMinimo||0)
+).length;
+
+document.getElementById(
+"painelVendasDia"
+).textContent=
+formatarMoeda(faturamento);
+
+document.getElementById(
+"painelQuantidadeVendas"
+).textContent=
+vendasHoje.length;
+
+document.getElementById(
+"painelMesasAbertas"
+).textContent=
+mesasAbertas;
+
+document.getElementById(
+"painelPedidosDelivery"
+).textContent=
+deliveryEmAndamento;
+
+document.getElementById(
+"painelEstoqueBaixo"
+).textContent=
+estoqueBaixo;
+
+document.getElementById(
+"painelLucroDia"
+).textContent=
+formatarMoeda(faturamento-custo)
+
+}
+
+/* =========================
+   BACKUP E RESTAURAÇÃO
+========================= */
+
+function criarDadosBackup(){
+
+return {
+
+versao:1,
+
+aplicativo:"GastroFlow",
+
+dataBackup:new Date().toISOString(),
+
+produtos:produtos,
+
+movimentacoes:movimentacoes,
+
+mesas:mesas,
+
+vendasCaixa:vendasCaixa,
+
+pedidosDelivery:pedidosDelivery,
+
+despesasFinanceiras:despesasFinanceiras,
+configFiscal:configFiscal,
+configCardapio:configCardapio,
+documentosFiscais:documentosFiscais
+
+}
+
+}
+
+function baixarArquivo(nome,conteudo,tipo){
+
+const blob=new Blob(
+[conteudo],
+{type:tipo}
+);
+
+const url=URL.createObjectURL(blob);
+
+const a=document.createElement("a");
+
+a.href=url;
+a.download=nome;
+
+document.body.appendChild(a);
+
+a.click();
+
+a.remove();
+
+setTimeout(
+()=>URL.revokeObjectURL(url),
+1000
+)
+
+}
+
+function exportarBackup(){
+
+try{
+
+const dados=criarDadosBackup();
+
+const conteudo=
+JSON.stringify(
+dados,
+null,
+2
+);
+
+const agora=new Date();
+
+const nome=
+"gastroflow-backup-"+
+agora.getFullYear()+
+String(
+agora.getMonth()+1
+).padStart(2,"0")+
+String(
+agora.getDate()
+).padStart(2,"0")+
+"-"+
+String(
+agora.getHours()
+).padStart(2,"0")+
+String(
+agora.getMinutes()
+).padStart(2,"0")+
+".json";
+
+baixarArquivo(
+nome,
+conteudo,
+"application/json"
+);
+
+mostrarMensagem(
+"💾 Backup realizado com sucesso!",
+"sucesso"
+)
+
+}catch(erro){
+
+console.error(erro);
+
+mostrarMensagem(
+"Não foi possível realizar o backup.",
+"erro"
+)
+
+}
+
+}
+
+function atualizarResumoBackup(){
+
+const p=document.getElementById(
+"backupProdutos"
+);
+
+const m=document.getElementById(
+"backupMovimentacoes"
+);
+
+const me=document.getElementById(
+"backupMesas"
+);
+
+const v=document.getElementById(
+"backupVendas"
+);
+
+const d=document.getElementById(
+"backupDelivery"
+);
+
+if(p)p.textContent=produtos.length;
+
+if(m)m.textContent=movimentacoes.length;
+
+if(me)me.textContent=mesas.length;
+
+if(v)v.textContent=vendasCaixa.length;
+
+if(d)d.textContent=pedidosDelivery.length;
+
+}
+
+function validarDadosBackup(dados){
+
+return !!(
+
+dados &&
+typeof dados==="object" &&
+
+Array.isArray(
+dados.produtos
+) &&
+
+Array.isArray(
+dados.movimentacoes
+) &&
+
+Array.isArray(
+dados.mesas
+) &&
+
+Array.isArray(
+dados.vendasCaixa
+) &&
+
+Array.isArray(
+dados.pedidosDelivery
+)
+
+)
+
+}
+
+function restaurarBackupArquivo(e){
+
+const arquivo=e.target.files[0];
+
+if(!arquivo)return;
+
+const leitor=new FileReader();
+
+leitor.onload=function(ev){
+
+try{
+
+const dados=
+JSON.parse(
+ev.target.result
+);
+
+if(!validarDadosBackup(dados)){
+
+throw new Error(
+"Arquivo de backup inválido."
+)
+
+}
+
+const confirmar=confirm(
+
+"⚠️ ATENÇÃO!\n\n"+
+
+"A restauração substituirá os dados atuais do GastroFlow.\n\n"+
+
+"Produtos: "+
+dados.produtos.length+
+"\n"+
+
+"Movimentações: "+
+dados.movimentacoes.length+
+"\n"+
+
+"Mesas: "+
+dados.mesas.length+
+"\n"+
+
+"Vendas: "+
+dados.vendasCaixa.length+
+"\n"+
+
+"Delivery: "+
+dados.pedidosDelivery.length+
+"\n\n"+
+
+"Recomenda-se fazer um backup atual antes de continuar.\n\n"+
+
+"Deseja realmente restaurar este backup?"
+
+);
+
+if(!confirmar)return;
+
+produtos=dados.produtos;
+
+movimentacoes=dados.movimentacoes;
+
+mesas=dados.mesas;
+
+vendasCaixa=dados.vendasCaixa;
+
+pedidosDelivery=dados.pedidosDelivery;
+
+despesasFinanceiras=Array.isArray(dados.despesasFinanceiras)?dados.despesasFinanceiras:[];
+
+configFiscal=dados.configFiscal&&typeof dados.configFiscal==="object"?dados.configFiscal:{};
+
+configCardapio=dados.configCardapio&&typeof dados.configCardapio==="object"?dados.configCardapio:{nome:"GastroFlow",mensagem:"Escolha seu pedido"};
+
+documentosFiscais=Array.isArray(dados.documentosFiscais)?dados.documentosFiscais:[];
+
+garantirMesas();
+
+salvarProdutos();
+
+salvarMovimentacoes();
+
+salvarMesas();
+
+salvarCaixa();
+
+salvarDelivery();
+salvarRecursosNovos();
+
+atualizarTudo();
+
+atualizarResumoBackup();
+
+mostrarMensagem(
+"💾 Backup restaurado com sucesso!",
+"sucesso"
+)
+
+}catch(erro){
+
+console.error(erro);
+
+mostrarMensagem(
+erro.message||
+"Não foi possível restaurar o backup.",
+"erro"
+)
+
+}finally{
+
+e.target.value="";
+
+}
+
+};
+
+leitor.onerror=function(){
+
+mostrarMensagem(
+"Não foi possível ler o arquivo de backup.",
+"erro"
+);
+
+e.target.value="";
+
+};
+
+leitor.readAsText(arquivo)
+
+}
+
+
+/* =========================
+   RECURSOS DIGITAIS / FINANCEIRO / FISCAL / QR
+========================= */
+const CHAVE_DESPESAS="gastroflow_despesas", CHAVE_FISCAL="gastroflow_fiscal", CHAVE_CARDAPIO="gastroflow_cardapio", CHAVE_FISCAIS="gastroflow_documentos_fiscais";
+let despesasFinanceiras=[], configFiscal={}, configCardapio={nome:"GastroFlow",mensagem:"Escolha seu pedido"}, documentosFiscais=[];
+function carregarRecursosNovos(){
+ try{despesasFinanceiras=JSON.parse(lerLocal(CHAVE_DESPESAS))||[]}catch(e){despesasFinanceiras=[]}
+ try{configFiscal=JSON.parse(lerLocal(CHAVE_FISCAL))||{}}catch(e){configFiscal={}}
+ try{configCardapio=Object.assign(configCardapio,JSON.parse(lerLocal(CHAVE_CARDAPIO))||{})}catch(e){}
+ try{documentosFiscais=JSON.parse(lerLocal(CHAVE_FISCAIS))||[]}catch(e){documentosFiscais=[]}
+}
+function salvarRecursosNovos(){salvarLocal(CHAVE_DESPESAS,JSON.stringify(despesasFinanceiras));salvarLocal(CHAVE_FISCAL,JSON.stringify(configFiscal));salvarLocal(CHAVE_CARDAPIO,JSON.stringify(configCardapio));salvarLocal(CHAVE_FISCAIS,JSON.stringify(documentosFiscais));agendarSincronizacaoNuvem()}
+function renderizarCardapio(){
+ const busca=(document.getElementById("buscaCardapio")?.value||"").toLowerCase(); const ativos=produtos.filter(p=>p.ativo!==false); const filtrados=ativos.filter(p=>!busca||String(p.nome||"").toLowerCase().includes(busca)||String(p.categoria||"").toLowerCase().includes(busca));
+ const cats=new Set(ativos.map(p=>p.categoria||"Sem categoria")); document.getElementById("cardapioDisponiveis").textContent=ativos.length; document.getElementById("cardapioIndisponiveis").textContent=produtos.length-ativos.length; document.getElementById("cardapioCategorias").textContent=cats.size;
+ const l=document.getElementById("listaCardapio"); if(!l)return; l.innerHTML=filtrados.length?filtrados.map(p=>`<article class="menu-digital-card">${p.foto?`<img src="${p.foto}" alt="${escaparHTML(p.nome)}">`:`<div class="menu-digital-foto">🍔</div>`}<div class="menu-digital-info"><small>${escaparHTML(p.categoria||"Sem categoria")}</small><h3>${escaparHTML(p.nome)}</h3><p>${Number(p.estoque||0)>0?"Disponível":"Indisponível"}</p><span class="menu-digital-preco">${formatarMoeda(p.preco)}</span></div></article>`).join(""):"<div class='sem-dados'>Nenhum produto encontrado.</div>";
+ const n=document.getElementById("cardapioNome"), m=document.getElementById("cardapioMensagem"); if(n)n.value=configCardapio.nome||"GastroFlow"; if(m)m.value=configCardapio.mensagem||"Escolha seu pedido";
+}
+function renderizarFinanceiro(){
+ const hoje=dataHojeISO(); const receitas=vendasCaixa.filter(v=>obterDataLocalISO(v.data)===hoje).reduce((a,v)=>a+Number(v.total||0),0); const despesas=despesasFinanceiras.filter(d=>d.data===hoje).reduce((a,d)=>a+Number(d.valor||0),0); const resultado=receitas-despesas;
+ ["finReceitas","finDespesas","finResultado"].forEach(id=>document.getElementById(id).textContent=formatarMoeda(id==="finReceitas"?receitas:id==="finDespesas"?despesas:resultado)); document.getElementById("finResultado").className=resultado>=0?"positivo":"negativo"; document.getElementById("finVendas").textContent=vendasCaixa.filter(v=>obterDataLocalISO(v.data)===hoje).length;
+ const cats={}; despesasFinanceiras.forEach(d=>cats[d.categoria]=(cats[d.categoria]||0)+Number(d.valor||0)); document.getElementById("dreResumo").innerHTML=`<div class="dre-linha"><span>Receita bruta</span><strong>${formatarMoeda(receitas)}</strong></div><div class="dre-linha"><span>Despesas operacionais</span><strong class="negativo">- ${formatarMoeda(despesas)}</strong></div><div class="dre-linha dre-total"><span>Resultado do dia</span><strong class="${resultado>=0?'positivo':'negativo'}">${formatarMoeda(resultado)}</strong></div>`+Object.keys(cats).map(c=>`<div class="dre-linha"><span>${escaparHTML(c)}</span><strong>${formatarMoeda(cats[c])}</strong></div>`).join("");
+ const ld=document.getElementById("listaDespesas"); ld.innerHTML=despesasFinanceiras.length?despesasFinanceiras.slice().reverse().map(d=>`<div class="item-card"><strong>${escaparHTML(d.descricao)}</strong><br><small>${escaparHTML(d.categoria)} • ${d.data}</small><strong style="float:right;color:#b91c1c">${formatarMoeda(d.valor)}</strong></div>`).join(""):"<div class='sem-dados'>Nenhuma despesa lançada.</div>";
+}
+function renderizarFiscal(){
+ const r=document.getElementById("fiscalRazao"),c=document.getElementById("fiscalCnpj"),i=document.getElementById("fiscalIe"),a=document.getElementById("fiscalAmbiente"); if(r)r.value=configFiscal.razao||"";if(c)c.value=configFiscal.cnpj||"";if(i)i.value=configFiscal.ie||"";if(a)a.value=configFiscal.ambiente||"homologacao";
+ const sel=document.getElementById("fiscalVenda"); if(sel){sel.innerHTML='<option value="">Selecione uma venda</option>'+vendasCaixa.slice().reverse().map(v=>`<option value="${escaparHTML(v.id)}">${escaparHTML(v.id)} — ${formatarMoeda(v.total)} — ${obterDataLocalISO(v.data)}</option>`).join("")}
+ const l=document.getElementById("listaFiscal"); if(l)l.innerHTML=documentosFiscais.length?documentosFiscais.slice().reverse().map(d=>`<div class="item-card"><strong>${escaparHTML(d.numero)}</strong><br><small>Venda ${escaparHTML(d.vendaId)} • ${d.status} • ${d.ambiente}</small><div class="acoes"><button type="button" class="btn btn-secondary" data-fiscal-export="${escaparHTML(d.id)}">📥 Exportar</button></div></div>`).join(""):"<div class='sem-dados'>Nenhum documento fiscal preparado.</div>";
+}
+function prepararDocumentoFiscal(){
+ const id=document.getElementById("fiscalVenda").value; const v=vendasCaixa.find(x=>String(x.id)===String(id)); if(!v){mostrarMensagem("Selecione uma venda.","erro");return} if(!configFiscal.cnpj){mostrarMensagem("Cadastre o CNPJ na configuração fiscal antes de preparar o documento.","erro");return}
+ const d={id:"FIS-"+Date.now(),numero:"RASCUNHO-"+Date.now(),vendaId:v.id,data:new Date().toISOString(),status:"Rascunho aguardando integração SEFAZ",ambiente:configFiscal.ambiente||"homologacao",emitente:configFiscal,itens:v.itens||[],total:v.total}; documentosFiscais.push(d);salvarRecursosNovos();renderizarFiscal();mostrarMensagem("🧾 Documento fiscal preparado. A autorização ainda depende da integração fiscal.","sucesso")
+}
+function exportarObjetoFiscal(d){const blob=new Blob([JSON.stringify(d,null,2)],{type:"application/json"});const u=URL.createObjectURL(blob);const a=document.createElement("a");a.href=u;a.download=(d.numero||"documento-fiscal")+".json";a.click();URL.revokeObjectURL(u)}
+function renderizarGarcom(){const s=document.getElementById("qrMesa");if(s)s.innerHTML=mesas.slice(0,500).map(m=>`<option value="${m.numero}">Mesa ${m.numero}</option>`).join(""); const b=document.getElementById("qrBaseUrl");if(b&&!b.value)b.value=location.href.split("?")[0];const g=document.getElementById("garcomMesas");if(!g)return;const abertas=mesas.filter(m=>m.status==="aberta").slice(0,20);g.innerHTML=abertas.length?abertas.map(m=>`<div class="mesa-card aberta"><h3>🪑 Mesa ${m.numero}</h3><p>${escaparHTML(m.cliente||"Sem cliente")}</p><span class="badge badge-aberta">${m.itens.length} itens</span><div class="acoes"><button type="button" class="btn btn-primary" data-acao="abrir-comanda" data-id="${m.id}">Abrir comanda</button></div></div>`).join(""):"<div class='sem-dados'>Nenhuma mesa aberta. Abra uma mesa no módulo Mesa/Comanda.</div>"}
+let ultimoQrLink="";
+function gerarQR(){const n=document.getElementById("qrMesa").value,base=document.getElementById("qrBaseUrl").value||location.href.split("?")[0];ultimoQrLink=base+(base.includes("?")?"&":"?")+"gastroflow=mesa&mesa="+encodeURIComponent(n);document.getElementById("qrLink").textContent=ultimoQrLink;document.getElementById("qrPreview").innerHTML=`<img alt="QR Code da Mesa ${escaparHTML(n)}" src="https://quickchart.io/qr?size=240&text=${encodeURIComponent(ultimoQrLink)}">`;}
+function copiarQR(){if(!ultimoQrLink){mostrarMensagem("Gere um QR Code primeiro.","erro");return}navigator.clipboard?.writeText(ultimoQrLink).then(()=>mostrarMensagem("📋 Link copiado!","sucesso")).catch(()=>mostrarMensagem("Não foi possível copiar automaticamente.","erro"))}
+function salvarCardapioConfig(){configCardapio.nome=document.getElementById("cardapioNome").value.trim()||"GastroFlow";configCardapio.mensagem=document.getElementById("cardapioMensagem").value.trim()||"Escolha seu pedido";salvarRecursosNovos();renderizarCardapio();mostrarMensagem("🍔 Cardápio salvo.","sucesso")}
+function registrarDespesa(e){e.preventDefault();despesasFinanceiras.push({id:"DES-"+Date.now(),descricao:document.getElementById("despesaDescricao").value.trim(),categoria:document.getElementById("despesaCategoria").value,valor:Number(document.getElementById("despesaValor").value||0),data:document.getElementById("despesaData").value||dataHojeISO()});salvarRecursosNovos();e.target.reset();document.getElementById("despesaData").value=dataHojeISO();renderizarFinanceiro();mostrarMensagem("💰 Despesa lançada.","sucesso")}
+function salvarFiscalConfig(){configFiscal={razao:document.getElementById("fiscalRazao").value.trim(),cnpj:document.getElementById("fiscalCnpj").value.trim(),ie:document.getElementById("fiscalIe").value.trim(),ambiente:document.getElementById("fiscalAmbiente").value};salvarRecursosNovos();mostrarMensagem("🧾 Configuração fiscal salva.","sucesso")}
+function inicializarRecursosNovos(){carregarRecursosNovos();const d=document.getElementById("despesaData");if(d)d.value=dataHojeISO();renderizarCardapio();renderizarFinanceiro();renderizarFiscal();renderizarGarcom();}
+
+function atualizarTudo(){
+
+renderizarProdutos();
+atualizarResumo();
+atualizarSelectEstoque();
+atualizarSelectComanda();
+renderizarEstoque();
+renderizarHistorico();
+renderizarMesas();
+renderizarPedidos();
+renderizarPreparo();
+renderizarPronto();
+renderizarEntregue();
+renderizarDeliveryProdutos();
+renderizarDelivery();
+renderizarCaixa();
+renderizarRelatorios();
+renderizarPainel();
+atualizarResumoBackup();
+renderizarCardapio();
+renderizarFinanceiro();
+renderizarFiscal();
+renderizarGarcom();
+
+}
+
+document.addEventListener("click",function(e){
+
+const painel=e.target.closest(
+"[data-painel-modulo]"
+);
+
+if(painel){
+
+abrirModulo(
+painel.getAttribute("data-painel-modulo")
+);
+
+return
+}
+
+const b=e.target.closest(
+"[data-acao]"
+);
+
+if(b){
+
+const a=b.getAttribute("data-acao"),
+id=b.getAttribute("data-id");
+
+if(a==="editar-produto")
+editarProduto(id);
+
+if(a==="excluir-produto")
+abrirModalExclusao(id);
+
+if(a==="abrir-mesa")
+abrirModalMesa(id);
+
+if(a==="abrir-comanda")
+abrirComanda(id);
+
+if(a==="fechar-mesa")
+fecharMesa(id);
+
+if(a==="ir-caixa")
+abrirModulo("caixa");
+
+if(a==="remover-item-comanda")
+removerItemComanda(
+b.getAttribute("data-item-id")
+);
+
+if(a==="enviar-pedido-preparo")
+enviarPedidoPreparo(id);
+
+if(a==="enviar-item-preparo")
+enviarItemPreparo(
+b.getAttribute("data-mesa-id"),
+b.getAttribute("data-item-id")
+);
+
+if(a==="abrir-preparo")
+abrirModulo("preparo");
+
+if(a==="abrir-pronto")
+abrirModulo("pronto");
+
+if(a==="marcar-pronto")
+marcarItemComoPronto(
+b.getAttribute("data-mesa-id"),
+b.getAttribute("data-item-id")
+);
+
+if(a==="marcar-entregue")
+marcarItemComoEntregue(
+b.getAttribute("data-mesa-id"),
+b.getAttribute("data-item-id")
+);
+
+return
+
+}
+
+const d=e.target.closest(
+"[data-delivery-acao]"
+);
+
+if(d){
+
+const a=d.getAttribute(
+"data-delivery-acao"
+);
+
+const id=d.getAttribute("data-id");
+
+if(a==="aumentar")
+aumentarProdutoDelivery(id);
+
+if(a==="diminuir")
+diminuirProdutoDelivery(id);
+
+if(a==="preparo")
+alterarStatusDelivery(id,"preparo");
+
+if(a==="pronto")
+alterarStatusDelivery(id,"pronto");
+
+if(a==="saiu")
+alterarStatusDelivery(id,"saiu");
+
+if(a==="entregue")
+alterarStatusDelivery(id,"entregue");
+
+if(a==="receber")
+abrirPagamentoDelivery(id);
+
+return
+
+}
+
+const menu=e.target.closest(".menu-btn");
+
+if(menu)
+abrirModulo(
+menu.getAttribute("data-modulo")
+)
+
+});
+
+document.getElementById(
+"formProduto"
+).addEventListener(
+"submit",
+salvarProduto
+);
+
+document.getElementById(
+"btnCancelar"
+).addEventListener(
+"click",
+cancelarEdicao
+);
+
+document.getElementById(
+"produtoFoto"
+).addEventListener(
+"change",
+carregarFotoProduto
+);
+
+document.getElementById(
+"btnRemoverFoto"
+).addEventListener(
+"click",
+removerFotoProduto
+);
+
+document.getElementById(
+"buscaProduto"
+).addEventListener(
+"input",
+renderizarProdutos
+);
+
+document.getElementById(
+"formMovimentacao"
+).addEventListener(
+"submit",
+registrarMovimentacao
+);
+
+document.getElementById(
+"estoqueProduto"
+).addEventListener(
+"change",
+mostrarEstoqueSelecionado
+);
+
+document.getElementById(
+"buscaEstoque"
+).addEventListener(
+"input",
+renderizarEstoque
+);
+
+document.getElementById(
+"btnCancelarExclusao"
+).addEventListener(
+"click",
+fecharModalExclusao
+);
+
+document.getElementById(
+"btnConfirmarExclusao"
+).addEventListener(
+"click",
+confirmarExclusao
+);
+
+document.getElementById(
+"formMesa"
+).addEventListener(
+"submit",
+abrirMesa
+);
+
+document.getElementById(
+"btnCancelarMesa"
+).addEventListener(
+"click",
+fecharModalMesa
+);
+
+document.getElementById(
+"btnFecharComanda"
+).addEventListener(
+"click",
+fecharModalComanda
+);
+
+document.getElementById(
+"btnAdicionarComanda"
+).addEventListener(
+"click",
+adicionarProdutoComanda
+);
+
+document.getElementById(
+"btnConfirmarPagamento"
+).addEventListener(
+"click",
+confirmarPagamentoCaixa
+);
+
+document.getElementById(
+"btnCancelarPagamento"
+).addEventListener(
+"click",
+cancelarPagamentoCaixa
+);
+
+document.getElementById(
+"formDelivery"
+).addEventListener(
+"submit",
+function(e){
+
+try{
+
+criarPedidoDelivery(e)
+
+}catch(err){
+
+mostrarMensagem(
+err.message||
+"Não foi possível criar o pedido.",
+"erro"
+)
+
+}
+
+});
+
+document.getElementById(
+"btnLimparDelivery"
+).addEventListener(
+"click",
+limparFormularioDelivery
+);
+
+document.getElementById(
+"btnConfirmarPagamentoDelivery"
+).addEventListener(
+"click",
+confirmarPagamentoDelivery
+);
+
+document.getElementById(
+"btnCancelarPagamentoDelivery"
+).addEventListener(
+"click",
+cancelarPagamentoDelivery
+);
+
+document.getElementById(
+"btnAtualizarRelatorios"
+).addEventListener(
+"click",
+renderizarRelatorios
+);
+
+document.getElementById(
+"btnRelatorioHoje"
+).addEventListener(
+"click",
+definirPeriodoHoje
+);
+
+document.getElementById(
+"btnRelatorio7Dias"
+).addEventListener(
+"click",
+definirPeriodo7Dias
+);
+
+document.getElementById(
+"btnRelatorioMes"
+).addEventListener(
+"click",
+definirPeriodoMes
+);
+
+document.getElementById(
+"btnImprimirRelatorio"
+).addEventListener(
+"click",
+imprimirRelatorio
+);
+
+document.getElementById(
+"relatorioDataInicio"
+).addEventListener(
+"change",
+renderizarRelatorios
+);
+
+document.getElementById(
+"relatorioDataFim"
+).addEventListener(
+"change",
+renderizarRelatorios
+);
+
+document.getElementById(
+"btnLimparRelatorios"
+).addEventListener(
+"click",
+function(){
+
+document.getElementById(
+"relatorioDataInicio"
+).value="";
+
+document.getElementById(
+"relatorioDataFim"
+).value="";
+
+renderizarRelatorios()
+
+});
+
+document.getElementById(
+"btnExportarBackup"
+).addEventListener(
+"click",
+exportarBackup
+);
+
+document.getElementById(
+"inputRestaurarBackup"
+).addEventListener(
+"change",
+restaurarBackupArquivo
+);
+
+document.getElementById(
+"btnInstalarApp"
+).addEventListener(
+"click",
+instalarGastroFlow
+);
+
+document.getElementById(
+"btnFecharInstalar"
+).addEventListener(
+"click",
+esconderBotaoInstalar
+);
+
+window.receberContaCaixa=
+receberContaCaixa;
+
+window.confirmarPagamentoCaixa=
+confirmarPagamentoCaixa;
+
+window.cancelarPagamentoCaixa=
+cancelarPagamentoCaixa;
+
+window.abrirPagamentoDelivery=
+abrirPagamentoDelivery;
+
+
+function instalarListenersRecursosNovos(){
+ document.getElementById("btnSalvarCardapio")?.addEventListener("click",salvarCardapioConfig);
+ document.getElementById("btnAtualizarCardapio")?.addEventListener("click",renderizarCardapio);
+ document.getElementById("buscaCardapio")?.addEventListener("input",renderizarCardapio);
+ document.getElementById("formDespesa")?.addEventListener("submit",registrarDespesa);
+ document.getElementById("btnSalvarFiscal")?.addEventListener("click",salvarFiscalConfig);
+ document.getElementById("btnPrepararFiscal")?.addEventListener("click",prepararDocumentoFiscal);
+ document.getElementById("btnExportarFiscal")?.addEventListener("click",()=>{const d=documentosFiscais[documentosFiscais.length-1];if(d)exportarObjetoFiscal(d);else mostrarMensagem("Nenhum documento preparado.","erro")});
+ document.getElementById("btnGerarQR")?.addEventListener("click",gerarQR);
+ document.getElementById("btnCopiarQR")?.addEventListener("click",copiarQR);
+ document.addEventListener("click",e=>{const b=e.target.closest("[data-fiscal-export]");if(b){const d=documentosFiscais.find(x=>String(x.id)===String(b.dataset.fiscalExport));if(d)exportarObjetoFiscal(d)}});
+}
+
+document.addEventListener(
+"DOMContentLoaded",
+function(){
+
+prepararManifesto();
+
+instalarListenersRecursosNovos();
+
+inicializarRecursosNovos();
+
+atualizarPreviewFoto();
+
+iniciarAutenticacao();
+
+setTimeout(
+mostrarBotaoInstalar,
+1200
+)
+
+});
+</script>
+
+</body>
+</html>
