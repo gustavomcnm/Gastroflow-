@@ -1230,6 +1230,13 @@ body.gastro-bloqueado>header,body.gastro-bloqueado>nav,body.gastro-bloqueado>mai
 
 /* ADMINISTRADOR / USUÁRIOS */
 .admin-users-grid{display:grid;grid-template-columns:minmax(0,1fr) 1.4fr;gap:18px}.admin-user-form,.admin-user-list{background:#fff;border:1px solid #e2e8f0;border-radius:18px;padding:20px;box-shadow:0 6px 20px rgba(15,23,42,.06)}.admin-user-form h3,.admin-user-list h3{margin-top:0;color:#0f172a}.admin-user-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.admin-user-table{width:100%;border-collapse:collapse;margin-top:12px}.admin-user-table th,.admin-user-table td{padding:12px 10px;border-bottom:1px solid #e2e8f0;text-align:left;vertical-align:middle}.admin-user-table th{font-size:13px;color:#64748b;background:#f8fafc}.admin-user-table td{font-size:14px;color:#334155}.admin-user-table select{min-width:120px;padding:8px;border:1px solid #cbd5e1;border-radius:9px;background:#fff}.admin-user-email{font-weight:800;color:#0f172a;word-break:break-word}.admin-user-status{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:900}.admin-user-status.ativo{background:#dcfce7;color:#166534}.admin-user-status.inativo{background:#fee2e2;color:#991b1b}.admin-user-actions-cell{display:flex;gap:7px;flex-wrap:wrap}.admin-user-actions-cell button{border:0;border-radius:8px;padding:8px 10px;font-weight:800;cursor:pointer}.admin-user-actions-cell .btn-reset-user{background:#eff6ff;color:#1d4ed8}.admin-user-actions-cell .btn-toggle-user{background:#fff7ed;color:#c2410c}.admin-user-actions-cell .btn-save-role{background:#f0fdf4;color:#166534}.admin-user-empty{padding:20px;text-align:center;color:#64748b;background:#f8fafc;border-radius:12px}.admin-user-note{font-size:13px;color:#64748b;line-height:1.5}@media(max-width:900px){.admin-users-grid{grid-template-columns:1fr}.admin-user-table{display:block;overflow-x:auto;white-space:nowrap}}
+
+.perm-modal{position:fixed;inset:0;background:rgba(15,23,42,.62);display:none;align-items:center;justify-content:center;z-index:9999;padding:18px}.perm-modal.ativo{display:flex}.perm-box{background:#fff;border-radius:20px;width:min(720px,100%);max-height:90vh;overflow:auto;padding:24px;box-shadow:0 24px 70px rgba(15,23,42,.28)}.perm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:18px 0}.perm-item{display:flex;align-items:center;gap:10px;padding:13px;border:1px solid #e2e8f0;border-radius:12px;background:#f8fafc}.perm-item input{width:18px;height:18px}.perm-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+
+/* =========================
+   IMPRESSÃO GASTROFLOW
+========================= */
+.btn-imprimir-gastro{background:#0f172a!important;color:#fff!important;border:0;border-radius:10px;padding:9px 12px;font-weight:800;cursor:pointer}.btn-imprimir-gastro:hover{opacity:.9}.pedido-acoes-impressao{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.sincronizacao-status{display:inline-flex;align-items:center;gap:7px;margin:8px 0;padding:7px 11px;border-radius:999px;background:#eff6ff;color:#1d4ed8;font-size:12px;font-weight:800}.sincronizacao-status.ok{background:#ecfdf5;color:#047857}.print-hide{display:none!important}
 </style>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -1266,6 +1273,9 @@ body.gastro-bloqueado>header,body.gastro-bloqueado>nav,body.gastro-bloqueado>mai
   <span id="perfilLogado" class="badge-perfil">USUÁRIO</span>
   <button type="button" class="btn-logout" id="btnSair">Sair</button>
 </div>
+
+<div id="statusSincronizacao" class="sincronizacao-status ok">🟢 Aguardando sincronização</div>
+
 
 
 <header>
@@ -1408,6 +1418,7 @@ Tudo o que seu estabelecimento precisa para organizar a operação em uma experi
 </div>
 </button>
 
+</div>
 </div>
 </div>
 </section>
@@ -2087,6 +2098,18 @@ A mesa só poderá ser recebida quando todos os produtos estiverem marcados como
 
 <section id="modulo-admin" class="modulo">
 <h2 class="titulo-modulo">👑 Administrador</h2>
+<div class="card" id="cardEstabelecimentoAdmin">
+<h3>🏪 Meu estabelecimento</h3>
+<p>Cadastre os dados do negócio. Eles ficam vinculados ao estabelecimento do administrador e serão usados como base para os funcionários.</p>
+<div class="form-grid">
+<div><label for="estabNome">Nome do estabelecimento</label><input id="estabNome" type="text" placeholder="Nome do restaurante"></div>
+<div><label for="estabCnpj">CNPJ</label><input id="estabCnpj" type="text" placeholder="00.000.000/0000-00"></div>
+<div><label for="estabTelefone">Telefone / WhatsApp</label><input id="estabTelefone" type="text" placeholder="(00) 00000-0000"></div>
+<div><label for="estabEndereco">Endereço</label><input id="estabEndereco" type="text" placeholder="Rua, número, bairro, cidade"></div>
+</div>
+<div class="acoes"><button type="button" class="btn btn-primary" id="btnSalvarEstabelecimento">💾 Salvar estabelecimento</button></div>
+<div class="alerta alerta-ok" style="margin-top:14px">🔐 Os funcionários criados pelo administrador serão vinculados a este estabelecimento.</div>
+</div>
 <div class="card"><h3>👥 Gerenciar usuários</h3><p>Cadastre funcionários com acesso próprio ao GastroFlow. Cada pessoa entra com seu próprio e-mail e senha.</p><div class="alerta alerta-ok">🔐 Esta área aparece somente para contas com perfil <strong>admin</strong>.</div></div>
 <div class="admin-users-grid">
 <div class="admin-user-form"><h3>➕ Criar novo usuário</h3><div class="form-grid">
@@ -2461,7 +2484,7 @@ Cancelar
 
 </div>
 
-<div id="mensagem" class="mensagem"></div>
+<div id="modalPermissoesUsuario" class="perm-modal" role="dialog" aria-modal="true"><div class="perm-box"><h2 id="tituloPermissoesUsuario">🔐 Permissões do usuário</h2><p id="subtituloPermissoesUsuario">Escolha exatamente quais áreas este funcionário poderá acessar.</p><div id="listaPermissoesUsuario" class="perm-grid"></div><div class="perm-actions"><button type="button" class="btn btn-secondary" id="btnCancelarPermissoes">Cancelar</button><button type="button" class="btn btn-primary" id="btnSalvarPermissoes">💾 Salvar permissões</button></div></div></div><div id="mensagem" class="mensagem"></div>
 
 <div id="instalarApp" class="instalar-app">
 
@@ -2500,7 +2523,107 @@ let auth=null;
 let banco=null;
 let usuarioAtual=null;
 let perfilUsuarioAtual="usuario";
+let permissoesUsuarioAtual={};
 let sincronizacaoTimer=null;
+let estabelecimentoAtual=null;
+let listenerNuvemAtivo=false;
+let ultimaAtualizacaoNuvem=0;
+let ignorarProximoSnapshotNuvem=false;
+
+function obterEstabelecimentoIdPadrao(){
+  return usuarioAtual ? "est_"+usuarioAtual.uid : "";
+}
+
+async function garantirEstabelecimentoAtual(){
+  if(!usuarioAtual||!banco)return null;
+  try{
+    const userRef=banco.ref("usuarios/"+usuarioAtual.uid);
+    const userSnap=await userRef.once("value");
+    const dadosUsuario=userSnap.val()||{};
+    let estabelecimentoId=dadosUsuario.estabelecimentoId||"";
+
+    if(ehAdministrador()){
+      if(!estabelecimentoId) estabelecimentoId=obterEstabelecimentoIdPadrao();
+      const estRef=banco.ref("estabelecimentos/"+estabelecimentoId);
+      const estSnap=await estRef.once("value");
+      const estAtual=estSnap.val()||{};
+      estabelecimentoAtual=Object.assign({
+        id:estabelecimentoId,
+        nome:"",
+        cnpj:"",
+        telefone:"",
+        endereco:"",
+        ownerUid:usuarioAtual.uid,
+        criadoEm:Date.now()
+      },estAtual,{id:estabelecimentoId});
+      await estRef.update({
+        ownerUid:usuarioAtual.uid,
+        atualizadoEm:Date.now()
+      });
+      await userRef.update({estabelecimentoId,atualizadoEm:Date.now()});
+
+      // Migração leve: usuários antigos sem estabelecimento passam a pertencer
+      // ao estabelecimento atual, sem alterar permissões ou dados existentes.
+      const usuariosSnap=await banco.ref("usuarios").once("value");
+      const usuarios=usuariosSnap.val()||{};
+      const atualizacoes={};
+      Object.keys(usuarios).forEach(uid=>{
+        const u=usuarios[uid]||{};
+        if(!u.estabelecimentoId) atualizacoes[uid+"/estabelecimentoId"]=estabelecimentoId;
+      });
+      if(Object.keys(atualizacoes).length) await banco.ref("usuarios").update(atualizacoes);
+    }else{
+      estabelecimentoId=dadosUsuario.estabelecimentoId||"";
+      if(estabelecimentoId){
+        const estSnap=await banco.ref("estabelecimentos/"+estabelecimentoId).once("value");
+        estabelecimentoAtual=estSnap.val()?Object.assign({id:estabelecimentoId},estSnap.val()):{id:estabelecimentoId};
+      }else estabelecimentoAtual=null;
+    }
+    preencherFormularioEstabelecimento();
+    return estabelecimentoAtual;
+  }catch(e){
+    console.warn("Não foi possível carregar o estabelecimento:",e);
+    return estabelecimentoAtual;
+  }
+}
+
+function preencherFormularioEstabelecimento(){
+  if(!estabelecimentoAtual)return;
+  const mapa={estabNome:"nome",estabCnpj:"cnpj",estabTelefone:"telefone",estabEndereco:"endereco"};
+  Object.entries(mapa).forEach(([id,chave])=>{
+    const el=document.getElementById(id); if(el) el.value=estabelecimentoAtual[chave]||"";
+  });
+}
+
+async function salvarEstabelecimentoAdmin(){
+  if(!ehAdministrador()||!usuarioAtual||!banco)return;
+  const nome=(document.getElementById("estabNome")?.value||"").trim();
+  if(!nome){mostrarMensagem("Informe o nome do estabelecimento.","erro");return;}
+  const id=estabelecimentoAtual?.id||obterEstabelecimentoIdPadrao();
+  const dados={
+    id,
+    nome,
+    cnpj:(document.getElementById("estabCnpj")?.value||"").trim(),
+    telefone:(document.getElementById("estabTelefone")?.value||"").trim(),
+    endereco:(document.getElementById("estabEndereco")?.value||"").trim(),
+    ownerUid:usuarioAtual.uid,
+    atualizadoEm:Date.now()
+  };
+  const btn=document.getElementById("btnSalvarEstabelecimento");
+  if(btn){btn.disabled=true;btn.textContent="⏳ Salvando..."}
+  try{
+    await banco.ref("estabelecimentos/"+id).update(dados);
+    await banco.ref("usuarios/"+usuarioAtual.uid).update({estabelecimentoId:id,atualizadoEm:Date.now()});
+    estabelecimentoAtual=dados;
+    mostrarMensagem("✅ Estabelecimento salvo com sucesso.","sucesso");
+  }catch(e){
+    console.error(e);
+    mostrarMensagem("Não foi possível salvar o estabelecimento.","erro");
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent="💾 Salvar estabelecimento"}
+  }
+}
+
 
 function iniciarFirebase(){
   try{
@@ -2545,13 +2668,68 @@ function montarEstadoNuvem(){
   };
 }
 
+function caminhoDadosEstabelecimento(){
+  return estabelecimentoAtual?.id ? "estabelecimentos/"+estabelecimentoAtual.id+"/dados" : "";
+}
+
+function atualizarStatusSincronizacao(texto,ok=true){
+  const el=document.getElementById("statusSincronizacao");
+  if(!el)return;
+  el.textContent=texto;
+  el.classList.toggle("ok",!!ok);
+}
+
+function iniciarSincronizacaoEmTempoReal(){
+  if(!usuarioAtual||!banco||!estabelecimentoAtual?.id)return;
+  const caminho=caminhoDadosEstabelecimento();
+  if(!caminho)return;
+  try{
+    banco.ref(caminho).off("value");
+    banco.ref(caminho).on("value",snap=>{
+      const dados=snap.val();
+      if(!dados||typeof dados!=="object")return;
+      const recebido=Number(dados.atualizadoEm||0);
+      if(recebido && recebido < ultimaAtualizacaoNuvem)return;
+      if(recebido)ultimaAtualizacaoNuvem=recebido;
+      produtos=Array.isArray(dados.produtos)?dados.produtos:[];
+      movimentacoes=Array.isArray(dados.movimentacoes)?dados.movimentacoes:[];
+      mesas=Array.isArray(dados.mesas)?dados.mesas:[];
+      vendasCaixa=Array.isArray(dados.vendasCaixa)?dados.vendasCaixa:[];
+      pedidosDelivery=Array.isArray(dados.pedidosDelivery)?dados.pedidosDelivery:[];
+      despesasFinanceiras=Array.isArray(dados.despesasFinanceiras)?dados.despesasFinanceiras:[];
+      configFiscal=dados.configFiscal&&typeof dados.configFiscal==="object"?dados.configFiscal:{};
+      configCardapio=Object.assign({nome:"GastroFlow",mensagem:"Escolha seu pedido"},dados.configCardapio||{});
+      documentosFiscais=Array.isArray(dados.documentosFiscais)?dados.documentosFiscais:[];
+      salvarTodosLocais();
+      atualizarTudo();
+      atualizarStatusSincronizacao("🟢 Sincronizado em tempo real",true);
+    },err=>{
+      console.error("Sincronização em tempo real:",err);
+      atualizarStatusSincronizacao("🟠 Sincronização indisponível",false);
+    });
+    listenerNuvemAtivo=true;
+  }catch(e){
+    console.error(e);
+    listenerNuvemAtivo=false;
+  }
+}
+
 function agendarSincronizacaoNuvem(){
   if(!usuarioAtual||!banco)return;
+  const caminho=caminhoDadosEstabelecimento();
+  if(!caminho)return;
   clearTimeout(sincronizacaoTimer);
+  atualizarStatusSincronizacao("🔄 Sincronizando...",false);
   sincronizacaoTimer=setTimeout(()=>{
-    banco.ref("usuarios/"+usuarioAtual.uid+"/dados").set(montarEstadoNuvem()).catch(e=>{
+    const estado=montarEstadoNuvem();
+    estado.atualizadoEm=Date.now();
+    ultimaAtualizacaoNuvem=estado.atualizadoEm;
+    banco.ref(caminho).set(estado).then(()=>{
+      atualizarStatusSincronizacao("🟢 Sincronizado em tempo real",true);
+    }).catch(e=>{
       console.error(e);
       mostrarMensagem("⚠️ Não foi possível sincronizar na nuvem. Os dados continuam salvos neste dispositivo.","erro");
+      atualizarStatusSincronizacao("🟠 Sincronização indisponível",false);
     });
   },500);
 }
@@ -2559,15 +2737,29 @@ function agendarSincronizacaoNuvem(){
 async function carregarDadosNuvem(){
   if(!usuarioAtual||!banco)return false;
 
-  const caminho="usuarios/"+usuarioAtual.uid+"/dados";
-  const comTimeout=(promessa,ms=8000)=>Promise.race([
+  const caminhoEst=caminhoDadosEstabelecimento();
+  const caminhoUsuario="usuarios/"+usuarioAtual.uid+"/dados";
+  if(!caminhoEst)return false;
+  const comTimeout=(promessa,ms=10000)=>Promise.race([
     promessa,
     new Promise((_,reject)=>setTimeout(()=>reject(new Error("Tempo limite ao conectar ao Realtime Database.")),ms))
   ]);
 
   try{
-    const snap=await comTimeout(banco.ref(caminho).once("value"),8000);
-    const dados=snap.val();
+    // O estabelecimento é a fonte oficial dos dados operacionais compartilhados.
+    const snapEst=await comTimeout(banco.ref(caminhoEst).once("value"),10000);
+    let dados=snapEst.val();
+
+    // Migração segura: se o estabelecimento ainda não possui dados, aproveita
+    // os dados antigos do administrador/usuário e grava uma cópia no estabelecimento.
+    if(!dados||typeof dados!=="object"){
+      const snapAntigo=await comTimeout(banco.ref(caminhoUsuario).once("value"),10000);
+      const antigos=snapAntigo.val();
+      if(antigos&&typeof antigos==="object"){
+        dados=antigos;
+        await comTimeout(banco.ref(caminhoEst).set(dados),10000);
+      }
+    }
 
     if(dados&&typeof dados==="object"){
       produtos=Array.isArray(dados.produtos)?dados.produtos:[];
@@ -2580,25 +2772,19 @@ async function carregarDadosNuvem(){
       configCardapio=Object.assign({nome:"GastroFlow",mensagem:"Escolha seu pedido"},dados.configCardapio||{});
       documentosFiscais=Array.isArray(dados.documentosFiscais)?dados.documentosFiscais:[];
       salvarTodosLocais();
+      iniciarSincronizacaoEmTempoReal();
       return true;
     }
 
-    // Conta nova: começa limpa e cria seu espaço próprio na nuvem.
+    // Estabelecimento realmente novo: cria um espaço inicial compartilhado.
     produtos=[];movimentacoes=[];mesas=[];vendasCaixa=[];pedidosDelivery=[];despesasFinanceiras=[];configFiscal={};configCardapio={nome:"GastroFlow",mensagem:"Escolha seu pedido"};documentosFiscais=[];
     garantirMesas();
     salvarTodosLocais();
-
-    await comTimeout(
-      banco.ref(caminho).set(montarEstadoNuvem()),
-      8000
-    );
-
+    await comTimeout(banco.ref(caminhoEst).set(montarEstadoNuvem()),10000);
     return true;
   }catch(e){
     console.error("GastroFlow nuvem:",e);
-    // A autenticação já foi concluída. Não deixe o usuário preso no botão.
-    // O app continua usando os dados locais e tentará sincronizar novamente depois.
-    mostrarMensagem("⚠️ Login realizado. A nuvem demorou para responder; o GastroFlow foi aberto com os dados deste dispositivo.","erro");
+    mostrarMensagem("⚠️ Login realizado, mas a nuvem demorou para responder. Os dados deste dispositivo foram preservados.","erro");
     return false;
   }
 }
@@ -2662,7 +2848,9 @@ async function carregarPerfilUsuario(usuario){
   }catch(e){
     console.warn("Não foi possível carregar o perfil do usuário:",e);
   }
+  await carregarPermissoesUsuario(usuario);
   atualizarPerfilVisual();
+  aplicarPermissoesMenu();
 }
 
 function ehAdministrador(){return String(perfilUsuarioAtual||"").toLowerCase()==="admin";}
@@ -2690,11 +2878,28 @@ async function garantirRegistroUsuarioAtual(){
   }
 }
 function obterAppCriadorUsuarios(){const nome="GastroFlowAdminCreator";let app=firebase.apps.find(a=>a.name===nome);if(!app)app=firebase.initializeApp(firebaseConfig,nome);return app;}
-async function criarUsuarioPeloAdministrador(){if(!ehAdministrador()||!usuarioAtual||!banco){mostrarMensagem("Acesso restrito ao administrador.","erro");return}const nome=(document.getElementById("adminNovoNome")?.value||"").trim();const email=(document.getElementById("adminNovoEmail")?.value||"").trim().toLowerCase();const senha=document.getElementById("adminNovaSenha")?.value||"";const perfil=document.getElementById("adminNovoPerfil")?.value||"usuario";if(!nome){mostrarMensagem("Informe o nome do usuário.","erro");return}if(!email){mostrarMensagem("Informe o e-mail do usuário.","erro");return}if(senha.length<6){mostrarMensagem("A senha inicial precisa ter pelo menos 6 caracteres.","erro");return}const btn=document.getElementById("btnCriarUsuarioAdmin");if(btn){btn.disabled=true;btn.textContent="⏳ Criando..."}let secondaryAuth=null;try{const app=obterAppCriadorUsuarios();secondaryAuth=app.auth();const cred=await secondaryAuth.createUserWithEmailAndPassword(email,senha);const uid=cred.user.uid;await banco.ref("usuarios/"+uid).set({email,nome,perfil:perfil==="admin"?"admin":"usuario",ativo:true,criadoEm:Date.now(),criadoPor:usuarioAtual.uid});try{await secondaryAuth.signOut()}catch(e){}document.getElementById("adminNovoNome").value="";document.getElementById("adminNovoEmail").value="";document.getElementById("adminNovaSenha").value="";document.getElementById("adminNovoPerfil").value="usuario";await renderizarUsuariosAdmin();mostrarMensagem("✅ Usuário criado com sucesso!","sucesso");}catch(err){try{if(secondaryAuth)await secondaryAuth.signOut()}catch(e){}mostrarMensagem(traduzirErroFirebase(err),"erro");}finally{if(btn){btn.disabled=false;btn.textContent="➕ Criar usuário"}}}
-async function renderizarUsuariosAdmin(){const lista=document.getElementById("listaUsuariosAdmin");if(!lista)return;if(!ehAdministrador()){lista.innerHTML="";return}lista.innerHTML='<div class="admin-user-empty">⏳ Carregando usuários...</div>';try{const snap=await banco.ref("usuarios").once("value");const dados=snap.val()||{};const usuarios=Object.entries(dados).map(([uid,v])=>({uid,...(v||{})}));if(usuarioAtual&&!usuarios.some(u=>u.uid===usuarioAtual.uid))usuarios.unshift({uid:usuarioAtual.uid,email:usuarioAtual.email||"",nome:usuarioAtual.email||"",perfil:"admin",ativo:true});usuarios.sort((a,b)=>String(a.nome||a.email||a.uid).localeCompare(String(b.nome||b.email||b.uid),"pt-BR"));if(!usuarios.length){lista.innerHTML='<div class="admin-user-empty">Nenhum usuário cadastrado ainda.</div>';return}lista.innerHTML='<div style="overflow-x:auto"><table class="admin-user-table"><thead><tr><th>Usuário</th><th>Perfil</th><th>Status</th><th>Ações</th></tr></thead><tbody>'+usuarios.map(u=>{const uid=String(u.uid);const isMe=usuarioAtual&&uid===usuarioAtual.uid;const ativo=u.ativo!==false;const perfil=String(u.perfil||"usuario").toLowerCase()==="admin"?"admin":"usuario";const nome=escaparHTML(u.nome||u.email||"Usuário");const email=escaparHTML(u.email||"E-mail não informado");return '<tr><td><div class="admin-user-email">'+nome+(isMe?' <span style="color:#2563eb">(você)</span>':'')+'</div><small>'+email+'</small></td><td><select data-admin-role="'+uid+'" '+(isMe?'disabled':'')+'><option value="usuario" '+(perfil==="usuario"?'selected':'')+'>👤 Usuário</option><option value="admin" '+(perfil==="admin"?'selected':'')+'>👑 Administrador</option></select></td><td><span class="admin-user-status '+(ativo?'ativo':'inativo')+'">'+(ativo?'🟢 Ativo':'🔴 Desativado')+'</span></td><td><div class="admin-user-actions-cell"><button type="button" class="btn-save-role" data-admin-save-role="'+uid+'" '+(isMe?'disabled':'')+'>💾 Perfil</button><button type="button" class="btn-reset-user" data-admin-reset="'+uid+'" data-admin-email="'+escaparHTML(u.email||"")+'">📧 Senha</button><button type="button" class="btn-toggle-user" data-admin-toggle="'+uid+'" '+(isMe?'disabled':'')+'>'+(ativo?'🔴 Desativar':'🟢 Ativar')+'</button></div></td></tr>';}).join('')+'</tbody></table></div>';}catch(err){console.error(err);lista.innerHTML='<div class="admin-user-empty">⚠️ Não foi possível carregar os usuários.</div>';}}
+async function criarUsuarioPeloAdministrador(){if(!ehAdministrador()||!usuarioAtual||!banco){mostrarMensagem("Acesso restrito ao administrador.","erro");return}const nome=(document.getElementById("adminNovoNome")?.value||"").trim();const email=(document.getElementById("adminNovoEmail")?.value||"").trim().toLowerCase();const senha=document.getElementById("adminNovaSenha")?.value||"";const perfil=document.getElementById("adminNovoPerfil")?.value||"usuario";if(!nome){mostrarMensagem("Informe o nome do usuário.","erro");return}if(!email){mostrarMensagem("Informe o e-mail do usuário.","erro");return}if(senha.length<6){mostrarMensagem("A senha inicial precisa ter pelo menos 6 caracteres.","erro");return}const btn=document.getElementById("btnCriarUsuarioAdmin");if(btn){btn.disabled=true;btn.textContent="⏳ Criando..."}let secondaryAuth=null;try{const app=obterAppCriadorUsuarios();secondaryAuth=app.auth();const cred=await secondaryAuth.createUserWithEmailAndPassword(email,senha);const uid=cred.user.uid;
+let estabelecimentoId=estabelecimentoAtual?.id||obterEstabelecimentoIdPadrao();
+if(perfil==="admin"){
+  estabelecimentoId="est_"+uid;
+  await banco.ref("estabelecimentos/"+estabelecimentoId).set({id:estabelecimentoId,nome:nome,cnpj:"",telefone:"",endereco:"",ownerUid:usuarioAtual.uid,criadoEm:Date.now(),criadoPor:usuarioAtual.uid});
+}
+await banco.ref("usuarios/"+uid).set({email,nome,perfil:perfil==="admin"?"admin":"usuario",ativo:true,estabelecimentoId,criadoEm:Date.now(),criadoPor:usuarioAtual.uid});try{await secondaryAuth.signOut()}catch(e){}document.getElementById("adminNovoNome").value="";document.getElementById("adminNovoEmail").value="";document.getElementById("adminNovaSenha").value="";document.getElementById("adminNovoPerfil").value="usuario";await renderizarUsuariosAdmin();mostrarMensagem("✅ Usuário criado com sucesso!","sucesso");}catch(err){try{if(secondaryAuth)await secondaryAuth.signOut()}catch(e){}mostrarMensagem(traduzirErroFirebase(err),"erro");}finally{if(btn){btn.disabled=false;btn.textContent="➕ Criar usuário"}}}
+async function renderizarUsuariosAdmin(){const lista=document.getElementById("listaUsuariosAdmin");if(!lista)return;if(!ehAdministrador()){lista.innerHTML="";return}lista.innerHTML='<div class="admin-user-empty">⏳ Carregando usuários...</div>';try{const snap=await banco.ref("usuarios").once("value");const dados=snap.val()||{};const usuarios=Object.entries(dados).map(([uid,v])=>({uid,...(v||{})}));if(usuarioAtual&&!usuarios.some(u=>u.uid===usuarioAtual.uid))usuarios.unshift({uid:usuarioAtual.uid,email:usuarioAtual.email||"",nome:usuarioAtual.email||"",perfil:"admin",ativo:true});usuarios.sort((a,b)=>String(a.nome||a.email||a.uid).localeCompare(String(b.nome||b.email||b.uid),"pt-BR"));if(!usuarios.length){lista.innerHTML='<div class="admin-user-empty">Nenhum usuário cadastrado ainda.</div>';return}lista.innerHTML='<div style="overflow-x:auto"><table class="admin-user-table"><thead><tr><th>Usuário</th><th>Perfil</th><th>Status</th><th>Ações</th></tr></thead><tbody>'+usuarios.map(u=>{const uid=String(u.uid);const isMe=usuarioAtual&&uid===usuarioAtual.uid;const ativo=u.ativo!==false;const perfil=String(u.perfil||"usuario").toLowerCase()==="admin"?"admin":"usuario";const nome=escaparHTML(u.nome||u.email||"Usuário");const email=escaparHTML(u.email||"E-mail não informado");return '<tr><td><div class="admin-user-email">'+nome+(isMe?' <span style="color:#2563eb">(você)</span>':'')+'</div><small>'+email+'</small></td><td><select data-admin-role="'+uid+'" '+(isMe?'disabled':'')+'><option value="usuario" '+(perfil==="usuario"?'selected':'')+'>👤 Usuário</option><option value="admin" '+(perfil==="admin"?'selected':'')+'>👑 Administrador</option></select></td><td><span class="admin-user-status '+(ativo?'ativo':'inativo')+'">'+(ativo?'🟢 Ativo':'🔴 Desativado')+'</span></td><td><div class="admin-user-actions-cell"><button type="button" class="btn-save-role" data-admin-save-role="'+uid+'" '+(isMe?'disabled':'')+'>💾 Perfil</button><button type="button" class="btn-perm-user" data-admin-perm="'+uid+'" '+(isMe?'disabled':'')+'>🔐 Permissões</button><button type="button" class="btn-reset-user" data-admin-reset="'+uid+'" data-admin-email="'+escaparHTML(u.email||"")+'">📧 Senha</button><button type="button" class="btn-toggle-user" data-admin-toggle="'+uid+'" '+(isMe?'disabled':'')+'>'+(ativo?'🔴 Desativar':'🟢 Ativar')+'</button></div></td></tr>';}).join('')+'</tbody></table></div>';}catch(err){console.error(err);lista.innerHTML='<div class="admin-user-empty">⚠️ Não foi possível carregar os usuários.</div>';}}
 async function salvarPerfilUsuarioAdmin(uid){if(!ehAdministrador()||!uid||uid===usuarioAtual?.uid)return;const select=document.querySelector('[data-admin-role="'+CSS.escape(uid)+'"]');const perfil=select?.value==="admin"?"admin":"usuario";try{await banco.ref("usuarios/"+uid).update({perfil,atualizadoEm:Date.now()});mostrarMensagem("✅ Perfil atualizado.","sucesso");await renderizarUsuariosAdmin();}catch(e){mostrarMensagem("Não foi possível atualizar o perfil.","erro")}}
 async function alternarStatusUsuarioAdmin(uid){if(!ehAdministrador()||!uid||uid===usuarioAtual?.uid)return;try{const snap=await banco.ref("usuarios/"+uid+"/ativo").once("value");const novo=snap.val()===false;await banco.ref("usuarios/"+uid).update({ativo:novo,atualizadoEm:Date.now()});mostrarMensagem(novo?"🟢 Usuário ativado.":"🔴 Usuário desativado.","sucesso");await renderizarUsuariosAdmin();}catch(e){mostrarMensagem("Não foi possível alterar o status do usuário.","erro")}}
 async function redefinirSenhaUsuarioAdmin(email){if(!ehAdministrador()||!email)return;try{await auth.sendPasswordResetEmail(email);mostrarMensagem("📧 Link de redefinição enviado para "+email,"sucesso");}catch(e){mostrarMensagem(traduzirErroFirebase(e),"erro")}}
+const MODULOS_PERMISSOES={painel:"🏠 Painel",produtos:"📦 Produtos",estoque:"🏪 Estoque",mesas:"🪑 Mesa/Comanda",pedidos:"🧾 Pedidos",preparo:"🔥 Em preparo",pronto:"✅ Pronto",entregue:"📦 Entregue",delivery:"🛵 Delivery",caixa:"💰 Caixa",relatorios:"📊 Relatórios",suporte:"📞 Contato e Suporte",backup:"💾 Backup",cardapio:"🍔 Cardápio Digital",financeiro:"💰 Financeiro/DRE",fiscal:"🧾 Fiscal",garcom:"📱 Garçom/QR Code"};
+const PERMISSOES_PADRAO_USUARIO=["painel","mesas","pedidos","preparo","pronto","entregue","delivery","garcom"];
+let usuarioPermissaoEditando=null;
+function obterPermissoesPadrao(){const o={};Object.keys(MODULOS_PERMISSOES).forEach(k=>o[k]=false);PERMISSOES_PADRAO_USUARIO.forEach(k=>o[k]=true);return o;}
+function usuarioTemPermissao(modulo){if(ehAdministrador())return true;return permissoesUsuarioAtual&&permissoesUsuarioAtual[modulo]===true;}
+function aplicarPermissoesMenu(){document.querySelectorAll('.menu-btn[data-modulo]').forEach(btn=>{const mod=btn.getAttribute('data-modulo');if(mod==='admin'){btn.style.display=ehAdministrador()?'inline-flex':'none';return;}btn.style.display=usuarioTemPermissao(mod)?'inline-flex':'none';});}
+async function carregarPermissoesUsuario(usuario){permissoesUsuarioAtual=obterPermissoesPadrao();if(!usuario||!banco||ehAdministrador())return;try{const snap=await banco.ref('usuarios/'+usuario.uid+'/permissoes').once('value');const val=snap.val();if(val&&typeof val==='object')Object.keys(permissoesUsuarioAtual).forEach(k=>{if(typeof val[k]==='boolean')permissoesUsuarioAtual[k]=val[k];});}catch(e){console.warn('Não foi possível carregar permissões:',e);}}
+function abrirEditorPermissoes(uid,nome){if(!ehAdministrador()||!uid||uid===usuarioAtual?.uid)return;usuarioPermissaoEditando=uid;const modal=document.getElementById('modalPermissoesUsuario'),lista=document.getElementById('listaPermissoesUsuario');if(!modal||!lista)return;document.getElementById('tituloPermissoesUsuario').textContent='🔐 Permissões — '+(nome||'Usuário');lista.innerHTML=Object.entries(MODULOS_PERMISSOES).map(([k,label])=>'<label class="perm-item"><input type="checkbox" data-perm-check="'+k+'"> <span>'+label+'</span></label>').join('');banco.ref('usuarios/'+uid+'/permissoes').once('value').then(snap=>{const atual=snap.val()||{},padrao=obterPermissoesPadrao();Object.keys(padrao).forEach(k=>{const el=lista.querySelector('[data-perm-check="'+k+'"]');if(el)el.checked=typeof atual[k]==='boolean'?atual[k]:padrao[k];});modal.classList.add('ativo');}).catch(()=>{const padrao=obterPermissoesPadrao();Object.keys(padrao).forEach(k=>{const el=lista.querySelector('[data-perm-check="'+k+'"]');if(el)el.checked=padrao[k];});modal.classList.add('ativo');});}
+function fecharEditorPermissoes(){usuarioPermissaoEditando=null;document.getElementById('modalPermissoesUsuario')?.classList.remove('ativo');}
+async function salvarPermissoesUsuario(){if(!ehAdministrador()||!usuarioPermissaoEditando)return;const permissoes={};document.querySelectorAll('#listaPermissoesUsuario [data-perm-check]').forEach(el=>{permissoes[el.getAttribute('data-perm-check')]=el.checked;});const btn=document.getElementById('btnSalvarPermissoes');if(btn)btn.disabled=true;try{await banco.ref('usuarios/'+usuarioPermissaoEditando+'/permissoes').set(permissoes);mostrarMensagem('✅ Permissões salvas com sucesso.','sucesso');fecharEditorPermissoes();await renderizarUsuariosAdmin();}catch(e){console.error(e);mostrarMensagem('Não foi possível salvar as permissões.','erro');}finally{if(btn)btn.disabled=false;}}
+
 function limparFormularioUsuarioAdmin(){["adminNovoNome","adminNovoEmail","adminNovaSenha"].forEach(id=>{const e=document.getElementById(id);if(e)e.value=""});const p=document.getElementById("adminNovoPerfil");if(p)p.value="usuario";}
 
 function mostrarApp(usuario){
@@ -2706,6 +2911,7 @@ function mostrarApp(usuario){
   document.getElementById("usuarioLogado").textContent="👤 "+(usuario.email||"Conta GastroFlow");
   atualizarPerfilVisual();
   atualizarAcessoAdministrador();
+  aplicarPermissoesMenu();
 }
 function mostrarLogin(){
   usuarioAtual=null;
@@ -2764,6 +2970,7 @@ async function entrarNoAppDepoisDoLogin(usuario){
   const ativoSnap=await banco.ref("usuarios/"+usuario.uid+"/ativo").once("value").catch(()=>null);
   if(ativoSnap && ativoSnap.exists() && ativoSnap.val()===false){mostrarErroLogin("Esta conta está desativada pelo administrador.");try{await auth.signOut()}catch(e){}setLoginCarregando(false);return;}
   await garantirRegistroUsuarioAtual();
+  await garantirEstabelecimentoAtual();
   mostrarApp(usuario);
 
   try{
@@ -2773,6 +2980,7 @@ async function entrarNoAppDepoisDoLogin(usuario){
     atualizarPreviewFoto();
     abrirModulo("painel");
     if(nuvemOk){
+      iniciarSincronizacaoEmTempoReal();
       mostrarMensagem("✅ GastroFlow conectado com sua conta e com a nuvem.","sucesso");
     }
   }catch(e){
@@ -2792,6 +3000,7 @@ function iniciarAutenticacao(){
   document.getElementById("formLogin")?.addEventListener("submit",entrarGastroFlow);
   document.getElementById("btnCriarConta")?.addEventListener("click",criarContaGastroFlow);
   document.getElementById("btnEsqueciSenha")?.addEventListener("click",recuperarSenhaGastroFlow);
+  document.getElementById("btnSalvarEstabelecimento")?.addEventListener("click",salvarEstabelecimentoAdmin);
   document.getElementById("btnSair")?.addEventListener("click",async()=>{try{await auth.signOut()}catch(e){mostrarMensagem("Não foi possível sair.","erro")}});
   auth.onAuthStateChanged(async usuario=>{
     if(usuario){await entrarNoAppDepoisDoLogin(usuario)}else{mostrarLogin();setLoginCarregando(false)}
@@ -2815,7 +3024,7 @@ window.scrollTo({top:0,behavior:"smooth"});
 }
 });
 
-
+document.addEventListener('click',function(e){const btnPerm=e.target.closest('[data-admin-perm]');if(btnPerm){const uid=btnPerm.getAttribute('data-admin-perm');const row=btnPerm.closest('tr');const nome=row?.querySelector('.admin-user-email')?.textContent?.replace('(você)','').trim()||'Usuário';abrirEditorPermissoes(uid,nome);}if(e.target.closest('#btnCancelarPermissoes'))fecharEditorPermissoes();if(e.target.closest('#btnSalvarPermissoes'))salvarPermissoesUsuario();});
 
 const CHAVE_PRODUTOS="gastroflow_produtos",
 CHAVE_MOVIMENTACOES="gastroflow_movimentacoes",
@@ -3037,12 +3246,17 @@ String(x.getMonth()+1).padStart(2,"0")+"-"+
 String(x.getDate()).padStart(2,"0")
 }
 
+// Mantém o computador atualizado com pedidos lançados em outros dispositivos.
+
+
+
 function dataHojeISO(){
 return obterDataLocalISO(new Date())
 }
 
 function salvarProdutos(){
-salvarLocal(CHAVE_PRODUTOS,JSON.stringify(produtos))
+salvarLocal(CHAVE_PRODUTOS,JSON.stringify(produtos));
+agendarSincronizacaoNuvem();
 }
 
 function carregarProdutos(){
@@ -3054,7 +3268,8 @@ produtos=[]
 }
 
 function salvarMovimentacoes(){
-salvarLocal(CHAVE_MOVIMENTACOES,JSON.stringify(movimentacoes))
+salvarLocal(CHAVE_MOVIMENTACOES,JSON.stringify(movimentacoes));
+agendarSincronizacaoNuvem();
 }
 
 function carregarMovimentacoes(){
@@ -3066,7 +3281,8 @@ movimentacoes=[]
 }
 
 function salvarMesas(){
-salvarLocal(CHAVE_MESAS,JSON.stringify(mesas))
+salvarLocal(CHAVE_MESAS,JSON.stringify(mesas));
+agendarSincronizacaoNuvem();
 }
 
 function carregarMesas(){
@@ -3078,7 +3294,8 @@ mesas=[]
 }
 
 function salvarCaixa(){
-salvarLocal(CHAVE_CAIXA,JSON.stringify(vendasCaixa))
+salvarLocal(CHAVE_CAIXA,JSON.stringify(vendasCaixa));
+agendarSincronizacaoNuvem();
 }
 
 function carregarCaixa(){
@@ -3090,7 +3307,8 @@ vendasCaixa=[]
 }
 
 function salvarDelivery(){
-salvarLocal(CHAVE_DELIVERY,JSON.stringify(pedidosDelivery))
+salvarLocal(CHAVE_DELIVERY,JSON.stringify(pedidosDelivery));
+agendarSincronizacaoNuvem();
 }
 
 function carregarDelivery(){
@@ -3746,6 +3964,7 @@ ${escaparHTML(m.tipo)}
 function abrirModulo(nome){
 
 if(nome==="admin" && !ehAdministrador()){mostrarMensagem("Acesso restrito ao administrador.","erro");return;}
+if(nome!=="admin" && !usuarioTemPermissao(nome)){mostrarMensagem("🔒 Você não possui permissão para acessar este módulo.","erro");return;}
 
 document.querySelectorAll(".modulo")
 .forEach(m=>m.classList.remove("ativo"));
@@ -3924,6 +4143,14 @@ type="button"
 data-acao="abrir-comanda"
 data-id="${m.id}">
 🧾 Comanda
+</button>
+
+<button
+class="btn btn-imprimir-gastro"
+type="button"
+data-acao="imprimir-conta"
+data-id="${m.id}">
+🖨️ Conta
 </button>
 
 ${
@@ -4467,6 +4694,10 @@ Number(i.quantidade||0),
 )}
 </span>
 
+</div>
+
+<div class="pedido-acoes-impressao">
+<button type="button" class="btn-imprimir-gastro" data-acao="imprimir-pedido" data-id="${m.id}" data-status-impressao="${status}">🖨️ Imprimir pedido</button>
 </div>
 
 ${botao}
@@ -5045,6 +5276,8 @@ onclick="window.receberContaCaixa('${m.id}');return false;">
 
 </button>
 
+<button type="button" class="btn btn-imprimir-gastro" style="margin-top:10px" data-acao="imprimir-conta" data-id="${m.id}">🖨️ Imprimir conta completa</button>
+
 `:
 `
 
@@ -5118,6 +5351,11 @@ ${new Date(v.data).toLocaleString("pt-BR")}
 <h3>
 Total: ${formatarMoeda(v.total)}
 </h3>
+
+<div class="acoes">
+<button type="button" class="btn btn-imprimir-gastro" data-acao="imprimir-comprovante" data-venda-id="${v.id}">🖨️ Imprimir comprovante</button>
+<button type="button" class="btn btn-secondary" data-acao="imprimir-venda-completa" data-venda-id="${v.id}">🧾 Imprimir conta + pagamento</button>
+</div>
 
 </div>
 
@@ -5935,6 +6173,8 @@ data-id="${x.id}">
 📦 Marcar como entregue
 </button>`:""
 }
+
+<button type="button" class="btn btn-imprimir-gastro" data-delivery-imprimir="${x.id}">🖨️ Imprimir pedido</button>
 
 ${
 x.status==="entregue"&&!x.pago?
@@ -7063,6 +7303,55 @@ function registrarDespesa(e){e.preventDefault();despesasFinanceiras.push({id:"DE
 function salvarFiscalConfig(){configFiscal={razao:document.getElementById("fiscalRazao").value.trim(),cnpj:document.getElementById("fiscalCnpj").value.trim(),ie:document.getElementById("fiscalIe").value.trim(),ambiente:document.getElementById("fiscalAmbiente").value};salvarRecursosNovos();mostrarMensagem("🧾 Configuração fiscal salva.","sucesso")}
 function inicializarRecursosNovos(){carregarRecursosNovos();const d=document.getElementById("despesaData");if(d)d.value=dataHojeISO();renderizarCardapio();renderizarFinanceiro();renderizarFiscal();renderizarGarcom();}
 
+
+function escapePrint(v){return escaparHTML(v==null?"":String(v));}
+function obterNomeEstabelecimento(){return estabelecimentoAtual?.nome||"GastroFlow";}
+function montarCabecalhoImpressao(subtitulo){
+  const e=estabelecimentoAtual||{};
+  return `<header class="print-header"><h1>${escapePrint(obterNomeEstabelecimento())}</h1><p>${escapePrint(subtitulo||"GastroFlow")}</p>${e.cnpj?`<p>CNPJ: ${escapePrint(e.cnpj)}</p>`:""}${e.telefone?`<p>${escapePrint(e.telefone)}</p>`:""}${e.endereco?`<p>${escapePrint(e.endereco)}</p>`:""}</header>`;
+}
+function formatarDataHoraImpressao(data){try{return new Date(data||Date.now()).toLocaleString("pt-BR")}catch(e){return new Date().toLocaleString("pt-BR")}}
+function abrirJanelaImpressao(titulo,conteudo){
+  const w=window.open("","_blank","width=420,height=720");
+  if(!w){mostrarMensagem("O navegador bloqueou a janela de impressão. Permita pop-ups para o GastroFlow.","erro");return;}
+  w.document.open();
+  w.document.write(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>${escapePrint(titulo)}</title><style>@page{size:auto;margin:8mm}*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;color:#111;margin:0;padding:8px;font-size:13px}.print-header{text-align:center;border-bottom:1px dashed #555;padding-bottom:10px;margin-bottom:10px}.print-header h1{font-size:20px;margin:0 0 4px}.print-header p{margin:2px 0;font-size:11px}.linha{display:flex;justify-content:space-between;gap:10px;margin:5px 0}.linha strong{font-weight:800}.item{padding:7px 0;border-bottom:1px dashed #aaa}.item-top{display:flex;justify-content:space-between;gap:8px}.item small{display:block;margin-top:2px;color:#444}.total{border-top:2px solid #111;margin-top:10px;padding-top:8px;font-size:18px;font-weight:900;display:flex;justify-content:space-between}.pagamento{margin-top:12px;padding:9px;border:1px solid #222;border-radius:6px}.rodape{text-align:center;margin-top:16px;border-top:1px dashed #555;padding-top:10px;font-size:11px}.obs{white-space:pre-wrap}.status{font-weight:800;text-transform:uppercase}@media print{.no-print{display:none!important}}</style></head><body>${conteudo}<div class="rodape">Obrigado pela preferência!<br>GastroFlow • ${formatarDataHoraImpressao()}</div><script>window.onload=function(){setTimeout(function(){window.print()},150)};<\/script></body></html>`);
+  w.document.close();
+}
+function itensParaImpressao(itens){
+  return (Array.isArray(itens)?itens:[]).map(i=>`<div class="item"><div class="item-top"><span>${Number(i.quantidade||0)}x ${escapePrint(i.nome)}</span><strong>${formatarMoeda(Number(i.subtotal!=null?i.subtotal:Number(i.preco||0)*Number(i.quantidade||0)))}</strong></div><small>${formatarMoeda(i.preco)} cada${i.pedidoStatus?` • ${escapePrint(i.pedidoStatus)}`:""}</small></div>`).join("");
+}
+function imprimirContaMesa(id){
+  const m=mesas.find(x=>String(x.id)===String(id)); if(!m){mostrarMensagem("Mesa não encontrada.","erro");return}
+  const total=calcularTotalMesa(m);
+  const html=montarCabecalhoImpressao("CONTA DA MESA")+`<div class="linha"><span>Mesa</span><strong>${escapePrint(m.numero)}</strong></div><div class="linha"><span>Comanda</span><strong>${escapePrint(m.comanda)}</strong></div><div class="linha"><span>Cliente</span><strong>${escapePrint(m.cliente||"Não informado")}</strong></div><div style="margin-top:12px">${itensParaImpressao(m.itens)}</div><div class="total"><span>TOTAL</span><span>${formatarMoeda(total)}</span></div>`;
+  abrirJanelaImpressao("Conta - Mesa "+m.numero,html);
+}
+function imprimirPedidoMesa(id,status){
+  const m=mesas.find(x=>String(x.id)===String(id)); if(!m){mostrarMensagem("Mesa não encontrada.","erro");return}
+  let itens=(m.itens||[]).filter(i=>!status||i.pedidoStatus===status);
+  if(!itens.length){mostrarMensagem("Não há itens desse status para imprimir.","erro");return}
+  const total=itens.reduce((t,i)=>t+Number(i.preco||0)*Number(i.quantidade||0),0);
+  const html=montarCabecalhoImpressao("PEDIDO • "+(status?String(status).toUpperCase():"TODOS"))+`<div class="linha"><span>Mesa</span><strong>${escapePrint(m.numero)}</strong></div><div class="linha"><span>Comanda</span><strong>${escapePrint(m.comanda)}</strong></div><div class="linha"><span>Cliente</span><strong>${escapePrint(m.cliente||"Não informado")}</strong></div><div class="linha"><span>Data</span><strong>${formatarDataHoraImpressao(m.dataAbertura)}</strong></div><div style="margin-top:12px">${itensParaImpressao(itens)}</div><div class="total"><span>TOTAL DOS ITENS</span><span>${formatarMoeda(total)}</span></div>`;
+  abrirJanelaImpressao("Pedido - Mesa "+m.numero,html);
+}
+function imprimirComprovanteVenda(v){
+  if(!v){mostrarMensagem("Venda não encontrada.","erro");return}
+  const origem=v.origem==="delivery"?"DELIVERY":"COMPROVANTE DE PAGAMENTO";
+  const html=montarCabecalhoImpressao(origem)+`<div class="linha"><span>Cliente</span><strong>${escapePrint(v.cliente||"Não informado")}</strong></div>${v.mesaNumero!=null?`<div class="linha"><span>Mesa</span><strong>${escapePrint(v.mesaNumero)}</strong></div>`:""}${v.comanda?`<div class="linha"><span>Comanda</span><strong>${escapePrint(v.comanda)}</strong></div>`:""}<div class="linha"><span>Pagamento</span><strong>${escapePrint(v.formaPagamento||"Não informado")}</strong></div><div class="linha"><span>Data</span><strong>${formatarDataHoraImpressao(v.data)}</strong></div><div class="pagamento"><div class="linha"><span>Status</span><strong class="status">PAGO ✓</strong></div><div class="total"><span>TOTAL</span><span>${formatarMoeda(v.total)}</span></div></div>`;
+  abrirJanelaImpressao("Comprovante de pagamento",html);
+}
+function imprimirVendaCompleta(v){
+  if(!v){mostrarMensagem("Venda não encontrada.","erro");return}
+  const html=montarCabecalhoImpressao("CONTA + PAGAMENTO")+`<div class="linha"><span>Cliente</span><strong>${escapePrint(v.cliente||"Não informado")}</strong></div>${v.mesaNumero!=null?`<div class="linha"><span>Mesa</span><strong>${escapePrint(v.mesaNumero)}</strong></div>`:""}${v.comanda?`<div class="linha"><span>Comanda</span><strong>${escapePrint(v.comanda)}</strong></div>`:""}<div style="margin-top:12px">${itensParaImpressao(v.itens)}</div><div class="total"><span>TOTAL</span><span>${formatarMoeda(v.total)}</span></div><div class="pagamento"><div class="linha"><span>Forma de pagamento</span><strong>${escapePrint(v.formaPagamento||"Não informado")}</strong></div><div class="linha"><span>Status</span><strong class="status">PAGO ✓</strong></div><div class="linha"><span>Data</span><strong>${formatarDataHoraImpressao(v.data)}</strong></div></div>`;
+  abrirJanelaImpressao("Conta + pagamento",html);
+}
+function imprimirDelivery(pedido){
+  if(!pedido){mostrarMensagem("Pedido delivery não encontrado.","erro");return}
+  const html=montarCabecalhoImpressao("PEDIDO DELIVERY")+`<div class="linha"><span>Cliente</span><strong>${escapePrint(pedido.cliente)}</strong></div><div class="linha"><span>Telefone</span><strong>${escapePrint(pedido.telefone)}</strong></div><div class="linha"><span>Endereço</span><strong>${escapePrint(pedido.endereco)}</strong></div><div class="linha"><span>Pagamento</span><strong>${escapePrint(pedido.formaPagamento||"A combinar")}</strong></div><div style="margin-top:12px">${itensParaImpressao(pedido.itens)}</div><div class="total"><span>TOTAL</span><span>${formatarMoeda(pedido.total)}</span></div>${pedido.observacoes?`<div class="obs" style="margin-top:12px"><strong>Observações:</strong><br>${escapePrint(pedido.observacoes)}</div>`:""}`;
+  abrirJanelaImpressao("Delivery",html);
+}
+
 function atualizarTudo(){
 
 renderizarProdutos();
@@ -7130,6 +7419,18 @@ fecharMesa(id);
 
 if(a==="ir-caixa")
 abrirModulo("caixa");
+
+if(a==="imprimir-conta")
+imprimirContaMesa(id);
+
+if(a==="imprimir-pedido")
+imprimirPedidoMesa(id,b.getAttribute("data-status-impressao"));
+
+if(a==="imprimir-comprovante")
+{const v=vendasCaixa.find(x=>String(x.id)===String(b.getAttribute("data-venda-id")));imprimirComprovanteVenda(v);}
+
+if(a==="imprimir-venda-completa")
+{const v=vendasCaixa.find(x=>String(x.id)===String(b.getAttribute("data-venda-id")));imprimirVendaCompleta(v);}
 
 if(a==="remover-item-comanda")
 removerItemComanda(
@@ -7203,6 +7504,9 @@ abrirPagamentoDelivery(id);
 return
 
 }
+
+const printDelivery=e.target.closest("[data-delivery-imprimir]");
+if(printDelivery){const pedido=pedidosDelivery.find(x=>String(x.id)===String(printDelivery.getAttribute("data-delivery-imprimir")));imprimirDelivery(pedido);return;}
 
 const menu=e.target.closest(".menu-btn");
 
